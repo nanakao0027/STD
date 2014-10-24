@@ -15,28 +15,29 @@ import java.util.Collections;
 public class STDexecution {
 
 	public static String TARGET_NAME;
-	
+
 	public static String targetDirectory;
 
-	
+
 	public STDexecution() {
 		// TODO 自動生成されたコンストラクター・スタブ
-		
-		
+		// commit push test
+
+
 		// 設定ファイルの読み込み
 		FileReader in = null;
 		BufferedReader br = null;
-		
+
 		try {
 			in = new FileReader("STDexecution.conf");
 			br = new BufferedReader(in);
-			
+
 			TARGET_NAME = br.readLine();
 			targetDirectory = br.readLine();
-			
-			
-			
-			
+
+
+
+
 		} catch (FileNotFoundException e) {
 			// TODO 自動生成された catch ブロック
 			e.printStackTrace();
@@ -50,11 +51,11 @@ public class STDexecution {
 			} catch (IOException e) {
 				// TODO 自動生成された catch ブロック
 				e.printStackTrace();
-			}			
-		}		
-		
+			}
+		}
+
 	}
-	
+
 	/**
 	 * @param args
 	 */
