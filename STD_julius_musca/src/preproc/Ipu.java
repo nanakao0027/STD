@@ -2,7 +2,7 @@ package preproc;
 import java.util.Comparator;
 
 public class Ipu {
-	
+
 	private String IDString;
 	private String ipuString;
 	private String syllStartString;
@@ -13,7 +13,7 @@ public class Ipu {
 	private String dpScoreString;
 	//private String amScoreString;
 
-	
+
 	/**
 	 * コンストラクタ onlySDPWSdetectから読み込むときに使用する
 	 * @param IDString
@@ -27,7 +27,7 @@ public class Ipu {
 		this.syllEndString = endString;
 		this.dpScoreString = dpString;
 	}
-	
+
 	public Ipu() {
 		// TODO 自動生成されたコンストラクター・スタブ
 	}
@@ -41,7 +41,7 @@ public class Ipu {
 		this.ipuString = ipuString;
 		this.syllStartString = startString;
 	}
-	
+
 	/**
 	 * frameStartとframeEnd入力用。.joutから読み込むときに使うと思う。
 	 * @param startString
@@ -51,7 +51,7 @@ public class Ipu {
 		this.frameStartString = startString;
 		this.frameEndString = endString;
 	}
-	
+
 	// 以降、フィールド取得用
 	public String get_ID() {
 		return IDString;
@@ -81,35 +81,34 @@ public class Ipu {
 		StringBuilder buf = new StringBuilder();
 		buf.append(get_ID());
 		buf.append(delimiter);
-		
+
 		buf.append(get_ipu());
 		buf.append(delimiter);
-		
+
 		buf.append(get_syllStart());
 		buf.append(delimiter);
-		
+
 		buf.append(get_syllMatch());
 		buf.append(delimiter);
-		
+
 		buf.append(get_syllEnd());
 		buf.append(delimiter);
-		
+
 		buf.append(get_frameStart());
 		buf.append(delimiter);
-		
+
 		buf.append(get_frameEnd());
 		buf.append(delimiter);
-		
+
 		buf.append(get_dpScore());
 		return buf.toString();
 	}
-	
+
 }
 
 
 /**
  * ソートの際に使用する。ipuソート用
- * @author takada
  *
  */
 class IpuComparator implements Comparator<Ipu> {
