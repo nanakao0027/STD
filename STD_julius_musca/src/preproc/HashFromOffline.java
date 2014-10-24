@@ -1,5 +1,6 @@
 package preproc;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -10,47 +11,64 @@ import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import org.omg.CORBA.BooleanHolder;
+
 public class HashFromOffline {
 
 	private HashMap<Integer, String> map = new HashMap<Integer, String>(); // 内部で持つhashテーブル
 
-	
-	
-	
-	/**
-	 * コンストラクタ
-	 * 予め保存してあるHashテーブルを読み込む
-	 */
-	private HashFromOffline() {
-		try {
-			FileInputStream inFile = new FileInputStream("Hashmap.map");
-			ObjectInputStream in = new ObjectInputStream(inFile);
-			map = (HashMap<Integer, String>) in.readObject();
-			in.close();
-			inFile.close();
-		} catch(Exception ex) {
-			ex.printStackTrace();
-		}
-	}
+	// 音節番号とipuの対応を取るファイル
+	public static String OFFLINE_INFO="offline_NTCIR10.info";
+
+	// offline.infoから作成するhashファイル。名前はこれに固定。
+	// ？？他のoffline.infoを扱う場合にはまた変更が必要
+	public static String HASH_NAME="Hashmap.map";
+
 
 
 	/**
 	 * パラメータ付きコンストラクタ
-	 * param inputfile 入力ファイル
-	 * テキストファイルからhashテーブルを作り保存する
+	 * @param inputfilename 入力ファイル
+	 * @param directoryString 入力ファイルのあるディレクトリ
+	 * offline.info から hashテーブルを作り保存する
 	 */
-	private HashFromOffline(String inputfile)  {
+	private HashFromOffline(String directoryString, String inputfilename)  {
 
 		BufferedReader br = null;
 		// hashmapをオブジェクトとして保存
+		ObjectInputStream in = null;
 		ObjectOutputStream out = null;
+		FileInputStream inFile = null;
+		File inputFile = new File(directoryString, inputfilename);
+		File outputFile = new File(directoryString, HASH_NAME);
+		boolean existBoolean = false;	// Hashmap.mapが存在しているか確認、ストリームを閉じるときにも使う
+
 
 		try {
-			br = new BufferedReader(new FileReader(inputfile));
-			// hashMapを作る
-			map = CreateHashMap(br);
-			out = new ObjectOutputStream(new FileOutputStream("Hashmap.map"));
-			out.writeObject(map);
+			br = new BufferedReader(new FileReader(inputFile)); //offline.infoを読み込み
+
+			// データディレクトリに HASH_NAME="Hashmap.map"があるか確認
+			// 　存在する　→　それを読み込む
+			// 　存在しない　→　新しく作る
+			File existCheckFile = outputFile;
+			existBoolean = existCheckFile.exists();
+			if(existBoolean){
+				System.out.println(HASH_NAME + "を読み込みます");
+				// Hashmap.mapをoutputFIleから読み込む
+				inFile = new FileInputStream(outputFile);
+				in = new ObjectInputStream(inFile);
+				map = (HashMap<Integer, String>) in.readObject();
+
+			}
+			else {
+				System.out.println(HASH_NAME + "を新しく作ります");
+				// Hasmmapを作る
+				map = CreateHashMap(br);
+				// Hasmmapを書き出し
+				out = new ObjectOutputStream(new FileOutputStream(outputFile));
+				out.writeObject(map);
+			}
+
 
 		} catch (FileNotFoundException e1) {
 			// TODO 自動生成された catch ブロック
@@ -58,9 +76,17 @@ public class HashFromOffline {
 		} catch (IOException e2) {
 			// TODO 自動生成された catch ブロック
 			e2.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			// TODO 自動生成された catch ブロック
+			e.printStackTrace();
 		} finally {
 			try {
-				out.close();
+				if(existBoolean){
+					inFile.close();
+					in.close();
+				} else {
+					out.close();
+				}
 				br.close();
 			} catch (IOException e) {
 				// TODO 自動生成された catch ブロック
@@ -70,7 +96,11 @@ public class HashFromOffline {
 	}
 
 
-
+	/**
+	 * HASHMAPを作る
+	 * @param br
+	 * @return
+	 */
 	private HashMap<Integer, String> CreateHashMap(BufferedReader br) {
 
 		HashMap<Integer, String> ret = new HashMap<Integer, String>();
@@ -80,11 +110,11 @@ public class HashFromOffline {
 
 			String line = null;
 			while ((line = br.readLine()) != null) {
-				
+
 				// 0703-0477 23040,23042 ←この形式のテキスト
 				String[] lineSplit = line.split("[ ,]");	//" "と","で文をsplit
 
-				// 
+				//
 				// 第2～第3ワードまでの数をkeyに、第1,2ワードを値にしてhashテーブルを作成
 				Integer valueOf = Integer.valueOf(lineSplit[1]);
 				Integer valueOf2 = Integer.valueOf(lineSplit[2]);
@@ -126,39 +156,38 @@ public class HashFromOffline {
 	public String Hashfunc(int key) {
 		return map.get(key);
 	}
-	
-	
+
+
 	/**
 	 * Hashmap.mapから読み込み、syllmatchに対応したipuとsyllstartが取得できるのでこれをset
 	 * ipuArraylistは参照渡しなので、それのsetメソッドを読み出してsetすればOK
 	 * @param ipuArraylist
 	 */
-	public static void setFrom_hash(ArrayList<Ipu> ipuArraylist){
+	public static void setFrom_hash(ArrayList<Ipu> ipuArraylist, String directoryString){
 
-		// 未実装：ここで.mapファイルが存在しているか確認してどっちのコンストラクタを呼ぶか分岐させること
-		
-		// コンストラクタからHashmap.mapを読み込む
-		HashFromOffline hash = new HashFromOffline();
-		String[] hogeStrings;
+		// コンストラクタを呼び出して"offline.info"から"Hashmap.map"を作り読み込む、既に存在していたらそれを読み込む。
+		HashFromOffline hash = new HashFromOffline(directoryString, OFFLINE_INFO);
+
 
 		// "syllmatch"から"ipu,start"が得られるので、","でsplitしてipuObjectのセッターに投げる
+		String[] hogeStrings;
 		for(Ipu ipuObject : ipuArraylist){
 			hogeStrings = hash.Hashfunc(Integer.valueOf(ipuObject.get_syllMatch())).split(",");
 			ipuObject.set_ipu_syllStart(hogeStrings[0], hogeStrings[1]);
 		}
 
-		return ;
+		return;
 	}
-	
-	
-	
+
+
+
 	/**
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		HashFromOffline hogeFromOffline = new HashFromOffline("offline.info");
+		HashFromOffline hogeFromOffline = new HashFromOffline("preprocData", OFFLINE_INFO);
 	}
 
-	
+
 
 }
