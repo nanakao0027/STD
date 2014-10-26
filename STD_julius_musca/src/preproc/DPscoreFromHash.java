@@ -12,14 +12,14 @@ import java.util.HashMap;
 
 public class DPscoreFromHash {
 
-	private HashMap<String, String> map = new HashMap<String, String>(); // “à•”‚Å‚Âhashƒe[ƒuƒ‹
+	private HashMap<String, String> map = new HashMap<String, String>(); // å†…éƒ¨ã§æŒã¤hashãƒ†ãƒ¼ãƒ–ãƒ«
 
-	
-	
-	
+
+
+
 	/**
-	 * ƒRƒ“ƒXƒgƒ‰ƒNƒ^
-	 * —\‚ß•Û‘¶‚µ‚Ä‚ ‚éHashƒe[ƒuƒ‹‚ğ“Ç‚İ‚Ş
+	 * ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
+	 * äºˆã‚ä¿å­˜ã—ã¦ã‚ã‚‹Hashãƒ†ãƒ¼ãƒ–ãƒ«ã‚’èª­ã¿è¾¼ã‚€
 	 */
 	public DPscoreFromHash() {
 		try {
@@ -35,33 +35,33 @@ public class DPscoreFromHash {
 
 
 	/**
-	 * ƒpƒ‰ƒ[ƒ^•t‚«ƒRƒ“ƒXƒgƒ‰ƒNƒ^
-	 * param inputfile “ü—Íƒtƒ@ƒCƒ‹
-	 * ƒeƒLƒXƒgƒtƒ@ƒCƒ‹‚©‚çhashƒe[ƒuƒ‹‚ğì‚è•Û‘¶‚·‚é
+	 * ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ä»˜ãã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
+	 * param inputfile å…¥åŠ›ãƒ•ã‚¡ã‚¤ãƒ«
+	 * ãƒ†ã‚­ã‚¹ãƒˆãƒ•ã‚¡ã‚¤ãƒ«ã‹ã‚‰hashãƒ†ãƒ¼ãƒ–ãƒ«ã‚’ä½œã‚Šä¿å­˜ã™ã‚‹
 	 */
 	public DPscoreFromHash(String inputfile)  {
 
 		BufferedReader br = null;
 
-		// ƒtƒ@ƒCƒ‹“ü—Í‚Ì€”õ
+		// ãƒ•ã‚¡ã‚¤ãƒ«å…¥åŠ›ã®æº–å‚™
 		try {
 			br = new BufferedReader(new FileReader(inputfile));
-			// hashMap‚ğì‚é
+			// hashMapã‚’ä½œã‚‹
 			map = CreateHashMap(br);
 		} catch (FileNotFoundException e) {
-			// TODO ©“®¶¬‚³‚ê‚½ catch ƒuƒƒbƒN
+			// TODO è‡ªå‹•ç”Ÿæˆã•ã‚ŒãŸ catch ãƒ–ãƒ­ãƒƒã‚¯
 			e.printStackTrace();
 		} finally {
 			try {
 				br.close();
 			} catch (IOException e) {
-				// TODO ©“®¶¬‚³‚ê‚½ catch ƒuƒƒbƒN
+				// TODO è‡ªå‹•ç”Ÿæˆã•ã‚ŒãŸ catch ãƒ–ãƒ­ãƒƒã‚¯
 				e.printStackTrace();
 			}
 		}
 
 
-		// hashmap‚ğƒIƒuƒWƒFƒNƒg‚Æ‚µ‚Ä•Û‘¶
+		// hashmapã‚’ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã¨ã—ã¦ä¿å­˜
 		ObjectOutputStream out = null;
 
 		try {
@@ -69,16 +69,16 @@ public class DPscoreFromHash {
 			out.writeObject(map);
 
 		} catch (FileNotFoundException e1) {
-			// TODO ©“®¶¬‚³‚ê‚½ catch ƒuƒƒbƒN
+			// TODO è‡ªå‹•ç”Ÿæˆã•ã‚ŒãŸ catch ãƒ–ãƒ­ãƒƒã‚¯
 			e1.printStackTrace();
 		} catch (IOException e2) {
-			// TODO ©“®¶¬‚³‚ê‚½ catch ƒuƒƒbƒN
+			// TODO è‡ªå‹•ç”Ÿæˆã•ã‚ŒãŸ catch ãƒ–ãƒ­ãƒƒã‚¯
 			e2.printStackTrace();
 		} finally {
 			try {
 				out.close();
 			} catch (IOException e) {
-				// TODO ©“®¶¬‚³‚ê‚½ catch ƒuƒƒbƒN
+				// TODO è‡ªå‹•ç”Ÿæˆã•ã‚ŒãŸ catch ãƒ–ãƒ­ãƒƒã‚¯
 				e.printStackTrace();
 			}
 		}
@@ -90,8 +90,8 @@ public class DPscoreFromHash {
 
 		HashMap<String, String> ret = new HashMap<String, String>();
 
-		try {				
-			
+		try {
+
 			String splitString[] = null;
 			String string = br.readLine();
 			StringBuilder builder = new StringBuilder();
@@ -110,18 +110,18 @@ public class DPscoreFromHash {
 				builder.setLength(0);
 				string = br.readLine();
 			}
-			
-			// (intval2ipu0 size n_ipu := 40497‚Ü‚Å)
-//			while (!br.readLine().split(" ")[0].equals("intval2ipu"));	// •K—v‚Ès‚Ü‚Å“Ç‚İ”ò‚Î‚µ
+
+			// (intval2ipu0 size n_ipu := 40497ã¾ã§)
+//			while (!br.readLine().split(" ")[0].equals("intval2ipu"));	// å¿…è¦ãªè¡Œã¾ã§èª­ã¿é£›ã°ã—
 //
 //			String line = null;
 //			while ((line = br.readLine()) != null) {
-//				
-//				// 0703-0477 23040,23042 ©‚±‚ÌŒ`®‚ÌƒeƒLƒXƒg
-//				String[] lineSplit = line.split("[ ,]");	//" "‚Æ","‚Å•¶‚ğsplit
 //
-//				// 
-//				// ‘æ2`‘æ3ƒ[ƒh‚Ü‚Å‚Ì”‚ğkey‚ÉA‘æ1,2ƒ[ƒh‚ğ’l‚É‚µ‚Ähashƒe[ƒuƒ‹‚ğì¬
+//				// 0703-0477 23040,23042 â†ã“ã®å½¢å¼ã®ãƒ†ã‚­ã‚¹ãƒˆ
+//				String[] lineSplit = line.split("[ ,]");	//" "ã¨","ã§æ–‡ã‚’split
+//
+//				//
+//				// ç¬¬2ã€œç¬¬3ãƒ¯ãƒ¼ãƒ‰ã¾ã§ã®æ•°ã‚’keyã«ã€ç¬¬1,2ãƒ¯ãƒ¼ãƒ‰ã‚’å€¤ã«ã—ã¦hashãƒ†ãƒ¼ãƒ–ãƒ«ã‚’ä½œæˆ
 //				Integer valueOf = Integer.valueOf(lineSplit[1]);
 //				Integer valueOf2 = Integer.valueOf(lineSplit[2]);
 //
@@ -136,15 +136,15 @@ public class DPscoreFromHash {
 //
 //				//System.out.println(lineSplit[0] + ","  + lineSplit[1] + ","+ lineSplit[2]);
 //
-//				// end~start‚ÌŠÔ‚Ì”š‚ğ‚·‚×‚Ä“o˜^‚·‚é
+//				// endâ€¾startã®é–“ã®æ•°å­—ã‚’ã™ã¹ã¦ç™»éŒ²ã™ã‚‹
 //				for (int i = valueOf; i <= valueOf2; i++) {
-//					ret.put(i, buf);	// hashƒe[ƒuƒ‹‚É“o˜^
+//					ret.put(i, buf);	// hashãƒ†ãƒ¼ãƒ–ãƒ«ã«ç™»éŒ²
 //				}
 //
 //			}
 
 		} catch (IOException e) {
-			// TODO ©“®¶¬‚³‚ê‚½ catch ƒuƒƒbƒN
+			// TODO è‡ªå‹•ç”Ÿæˆã•ã‚ŒãŸ catch ãƒ–ãƒ­ãƒƒã‚¯
 			e.printStackTrace();
 		}
 
@@ -155,27 +155,27 @@ public class DPscoreFromHash {
 
 
 	/**
-	 * HashŠÖ”
-	 * ŠO‚©‚çƒL[‚ª“n‚³‚ê‚½‚ç’l‚ğ•Ô‚·
-	 * @param key ƒL[
+	 * Hashé–¢æ•°
+	 * å¤–ã‹ã‚‰ã‚­ãƒ¼ãŒæ¸¡ã•ã‚ŒãŸã‚‰å€¤ã‚’è¿”ã™
+	 * @param key ã‚­ãƒ¼
 	 */
 	public String Hashfunc(int key) {
 		return map.get(key);
 	}
-	
-	
+
+
 	/**
-	 * DPHashmap.map‚©‚ç“Ç‚İ‚İAsyllmatch‚É‘Î‰‚µ‚½ipu‚Æsyllstart‚ªæ“¾‚Å‚«‚é‚Ì‚Å‚±‚ê‚ğset
-	 * ipuArraylist‚ÍQÆ“n‚µ‚È‚Ì‚ÅA‚»‚ê‚Ìsetƒƒ\ƒbƒh‚ğ“Ç‚İo‚µ‚Äset‚·‚ê‚ÎOK
+	 * DPHashmap.mapã‹ã‚‰èª­ã¿è¾¼ã¿ã€syllmatchã«å¯¾å¿œã—ãŸipuã¨syllstartãŒå–å¾—ã§ãã‚‹ã®ã§ã“ã‚Œã‚’set
+	 * ipuArraylistã¯å‚ç…§æ¸¡ã—ãªã®ã§ã€ãã‚Œã®setãƒ¡ã‚½ãƒƒãƒ‰ã‚’èª­ã¿å‡ºã—ã¦setã™ã‚Œã°OK
 	 * @param ipuArraylist
 	 */
 	public static void setFrom_hash(ArrayList<Ipu> ipuArraylist){
 
-		// ƒRƒ“ƒXƒgƒ‰ƒNƒ^‚ÅDPHashmap.map‚ğ“Ç‚İ‚İ
+		// ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ã§DPHashmap.mapã‚’èª­ã¿è¾¼ã¿
 		DPscoreFromHash hash = new DPscoreFromHash();
 		String[] hogeStrings;
 
-		// syllmatch@¨@"ipu,start"‚ª“¾‚ç‚ê‚éA","‚Åsplit‚µ‚Äsetƒƒ\ƒbƒh‚É“Š‚°‚é
+		// syllmatchã€€â†’ã€€"ipu,start"ãŒå¾—ã‚‰ã‚Œã‚‹ã€","ã§splitã—ã¦setãƒ¡ã‚½ãƒƒãƒ‰ã«æŠ•ã’ã‚‹
 		for(Ipu ipuObject : ipuArraylist){
 			hogeStrings = hash.Hashfunc(Integer.valueOf(ipuObject.get_syllMatch())).split(",");
 			ipuObject.set_ipu_syllStart(hogeStrings[0], hogeStrings[1]);
@@ -183,17 +183,17 @@ public class DPscoreFromHash {
 
 		return ;
 	}
-	
-	
-	
+
+
+
 	/**
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		
+
 		new DPscoreFromHash("ID_ipu_startFrame_outFrame_DPscore-threshold0.1.txt");
 	}
 
-	
+
 
 }

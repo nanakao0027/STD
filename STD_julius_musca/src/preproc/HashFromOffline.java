@@ -11,73 +11,70 @@ import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import org.omg.CORBA.BooleanHolder;
-
 public class HashFromOffline {
 
-	private HashMap<Integer, String> map = new HashMap<Integer, String>(); // “à•”‚Å‚Âhashƒe[ƒuƒ‹
+	private HashMap<Integer, String> map = new HashMap<Integer, String>(); // å†…éƒ¨ã§æŒã¤hashãƒ†ãƒ¼ãƒ–ãƒ«
 
-	// ‰¹ß”Ô†‚Æipu‚Ì‘Î‰‚ğæ‚éƒtƒ@ƒCƒ‹
+	// éŸ³ç¯€ç•ªå·ã¨ipuã®å¯¾å¿œã‚’å–ã‚‹ãƒ•ã‚¡ã‚¤ãƒ«
 	public static String OFFLINE_INFO="offline_NTCIR10.info";
 
-	// offline.info‚©‚çì¬‚·‚éhashƒtƒ@ƒCƒ‹B–¼‘O‚Í‚±‚ê‚ÉŒÅ’èB
-	// HH‘¼‚Ìoffline.info‚ğˆµ‚¤ê‡‚É‚Í‚Ü‚½•ÏX‚ª•K—v
+	// offline.infoã‹ã‚‰ä½œæˆã™ã‚‹hashãƒ•ã‚¡ã‚¤ãƒ«ã€‚åå‰ã¯ã“ã‚Œã«å›ºå®šã€‚
+	// ï¼Ÿï¼Ÿä»–ã®offline.infoã‚’æ‰±ã†å ´åˆã«ã¯ã¾ãŸå¤‰æ›´ãŒå¿…è¦
 	public static String HASH_NAME="Hashmap.map";
 
 
 
+
 	/**
-	 * ƒpƒ‰ƒ[ƒ^•t‚«ƒRƒ“ƒXƒgƒ‰ƒNƒ^
-	 * @param inputfilename “ü—Íƒtƒ@ƒCƒ‹
-	 * @param directoryString “ü—Íƒtƒ@ƒCƒ‹‚Ì‚ ‚éƒfƒBƒŒƒNƒgƒŠ
-	 * offline.info ‚©‚ç hashƒe[ƒuƒ‹‚ğì‚è•Û‘¶‚·‚é
+	 * ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ä»˜ãã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
+	 * @param inputfilename å…¥åŠ›ãƒ•ã‚¡ã‚¤ãƒ«
+	 * @param directoryString å…¥åŠ›ãƒ•ã‚¡ã‚¤ãƒ«ã®ã‚ã‚‹ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒª
+	 * offline.info ã‹ã‚‰ hashãƒ†ãƒ¼ãƒ–ãƒ«ã‚’ä½œã‚Šä¿å­˜ã™ã‚‹
 	 */
-	private HashFromOffline(String directoryString, String inputfilename)  {
+	private HashFromOffline(String directoryString, String inputfilename) {
 
 		BufferedReader br = null;
-		// hashmap‚ğƒIƒuƒWƒFƒNƒg‚Æ‚µ‚Ä•Û‘¶
+		// hashmapã‚’ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã¨ã—ã¦ä¿å­˜
 		ObjectInputStream in = null;
 		ObjectOutputStream out = null;
 		FileInputStream inFile = null;
 		File inputFile = new File(directoryString, inputfilename);
 		File outputFile = new File(directoryString, HASH_NAME);
-		boolean existBoolean = false;	// Hashmap.map‚ª‘¶İ‚µ‚Ä‚¢‚é‚©Šm”FAƒXƒgƒŠ[ƒ€‚ğ•Â‚¶‚é‚Æ‚«‚É‚àg‚¤
+		boolean existBoolean = false;	// Hashmap.mapãŒå­˜åœ¨ã—ã¦ã„ã‚‹ã‹ç¢ºèªã€ã‚¹ãƒˆãƒªãƒ¼ãƒ ã‚’é–‰ã˜ã‚‹ã¨ãã«ã‚‚ä½¿ã†
 
 
 		try {
-			br = new BufferedReader(new FileReader(inputFile)); //offline.info‚ğ“Ç‚İ‚İ
+			br = new BufferedReader(new FileReader(inputFile)); //offline.infoã‚’èª­ã¿è¾¼ã¿
 
-			// ƒf[ƒ^ƒfƒBƒŒƒNƒgƒŠ‚É HASH_NAME="Hashmap.map"‚ª‚ ‚é‚©Šm”F
-			// @‘¶İ‚·‚é@¨@‚»‚ê‚ğ“Ç‚İ‚Ş
-			// @‘¶İ‚µ‚È‚¢@¨@V‚µ‚­ì‚é
+			// ãƒ‡ãƒ¼ã‚¿ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã« HASH_NAME="Hashmap.map"ãŒã‚ã‚‹ã‹ç¢ºèª
+			// ã€€å­˜åœ¨ã™ã‚‹ã€€â†’ã€€ãã‚Œã‚’èª­ã¿è¾¼ã‚€
+			// ã€€å­˜åœ¨ã—ãªã„ã€€â†’ã€€æ–°ã—ãä½œã‚‹
 			File existCheckFile = outputFile;
 			existBoolean = existCheckFile.exists();
 			if(existBoolean){
-				System.out.println(HASH_NAME + "‚ğ“Ç‚İ‚İ‚Ü‚·");
-				// Hashmap.map‚ğoutputFIle‚©‚ç“Ç‚İ‚Ş
+				System.out.println("Reading " + HASH_NAME);
+				// Hashmap.mapã‚’outputFIleã‹ã‚‰èª­ã¿è¾¼ã‚€
 				inFile = new FileInputStream(outputFile);
 				in = new ObjectInputStream(inFile);
 				map = (HashMap<Integer, String>) in.readObject();
-
 			}
 			else {
-				System.out.println(HASH_NAME + "‚ğV‚µ‚­ì‚è‚Ü‚·");
-				// Hasmmap‚ğì‚é
+				System.out.println("Creating new " + HASH_NAME);
+				// Hasmmapã‚’ä½œã‚‹
 				map = CreateHashMap(br);
-				// Hasmmap‚ğ‘‚«o‚µ
+				// Hasmmapã‚’æ›¸ãå‡ºã—
 				out = new ObjectOutputStream(new FileOutputStream(outputFile));
 				out.writeObject(map);
 			}
 
-
 		} catch (FileNotFoundException e1) {
-			// TODO ©“®¶¬‚³‚ê‚½ catch ƒuƒƒbƒN
+			// TODO è‡ªå‹•ç”Ÿæˆã•ã‚ŒãŸ catch ãƒ–ãƒ­ãƒƒã‚¯
 			e1.printStackTrace();
 		} catch (IOException e2) {
-			// TODO ©“®¶¬‚³‚ê‚½ catch ƒuƒƒbƒN
+			// TODO è‡ªå‹•ç”Ÿæˆã•ã‚ŒãŸ catch ãƒ–ãƒ­ãƒƒã‚¯
 			e2.printStackTrace();
 		} catch (ClassNotFoundException e) {
-			// TODO ©“®¶¬‚³‚ê‚½ catch ƒuƒƒbƒN
+			// TODO è‡ªå‹•ç”Ÿæˆã•ã‚ŒãŸ catch ãƒ–ãƒ­ãƒƒã‚¯
 			e.printStackTrace();
 		} finally {
 			try {
@@ -89,15 +86,17 @@ public class HashFromOffline {
 				}
 				br.close();
 			} catch (IOException e) {
-				// TODO ©“®¶¬‚³‚ê‚½ catch ƒuƒƒbƒN
+				// TODO è‡ªå‹•ç”Ÿæˆã•ã‚ŒãŸ catch ãƒ–ãƒ­ãƒƒã‚¯
 				e.printStackTrace();
 			}
 		}
 	}
 
 
+
+
 	/**
-	 * HASHMAP‚ğì‚é
+	 * HASHMAPã‚’ä½œã‚‹
 	 * @param br
 	 * @return
 	 */
@@ -105,20 +104,18 @@ public class HashFromOffline {
 
 		HashMap<Integer, String> ret = new HashMap<Integer, String>();
 
-		try {															// (intval2ipu0 size n_ipu := 40497‚Ü‚Å)
-			while (!br.readLine().split(" ")[0].equals("intval2ipu"));	// •K—v‚Ès‚Ü‚Å“Ç‚İ”ò‚Î‚µ
+		try {	// (intval2ipu0 size n_ipu := 40497ã¾ã§)
+			while (!br.readLine().split(" ")[0].equals("intval2ipu"));	// å¿…è¦ãªè¡Œã¾ã§èª­ã¿é£›ã°ã—
 
 			String line = null;
 			while ((line = br.readLine()) != null) {
 
-				// 0703-0477 23040,23042 ©‚±‚ÌŒ`®‚ÌƒeƒLƒXƒg
-				String[] lineSplit = line.split("[ ,]");	//" "‚Æ","‚Å•¶‚ğsplit
+				// 0703-0477 23040,23042 â†ã“ã®å½¢å¼ã®ãƒ†ã‚­ã‚¹ãƒˆ
+				String[] lineSplit = line.split("[ ,]");	//" "ã¨","ã§æ–‡ã‚’split
 
-				//
-				// ‘æ2`‘æ3ƒ[ƒh‚Ü‚Å‚Ì”‚ğkey‚ÉA‘æ1,2ƒ[ƒh‚ğ’l‚É‚µ‚Ähashƒe[ƒuƒ‹‚ğì¬
+				// ç¬¬2ï½ç¬¬3ãƒ¯ãƒ¼ãƒ‰ã¾ã§ã®æ•°ã‚’keyã«ã€ç¬¬1,2ãƒ¯ãƒ¼ãƒ‰ã‚’å€¤ã«ã—ã¦hashãƒ†ãƒ¼ãƒ–ãƒ«ã‚’ä½œæˆ
 				Integer valueOf = Integer.valueOf(lineSplit[1]);
 				Integer valueOf2 = Integer.valueOf(lineSplit[2]);
-
 				String ipuNumberString = lineSplit[0];
 				ipuNumberString = ipuNumberString.replace("-", "_");
 				ipuNumberString = ipuNumberString.substring(0, 2) + "-" + ipuNumberString.substring(2,ipuNumberString.length());
@@ -128,56 +125,55 @@ public class HashFromOffline {
 				buffer.append(lineSplit[1]);
 				String buf = buffer.toString();
 
-				//System.out.println(lineSplit[0] + ","  + lineSplit[1] + ","+ lineSplit[2]);
+				//System.out.println(lineSplit[0] + "," + lineSplit[1] + ","+ lineSplit[2]);
 
-				// end~start‚ÌŠÔ‚Ì”š‚ğ‚·‚×‚Ä“o˜^‚·‚é
+				// end~startã®é–“ã®æ•°å­—ã‚’ã™ã¹ã¦ç™»éŒ²ã™ã‚‹
 				for (int i = valueOf; i <= valueOf2; i++) {
-					ret.put(i, buf);	// hashƒe[ƒuƒ‹‚É“o˜^
+					ret.put(i, buf);	// hashãƒ†ãƒ¼ãƒ–ãƒ«ã«ç™»éŒ²
 				}
-
 			}
 
 		} catch (IOException e) {
-			// TODO ©“®¶¬‚³‚ê‚½ catch ƒuƒƒbƒN
+			// TODO è‡ªå‹•ç”Ÿæˆã•ã‚ŒãŸ catch ãƒ–ãƒ­ãƒƒã‚¯
 			e.printStackTrace();
 		}
-
-
 		return ret;
 	}
 
 
 
+
 	/**
-	 * HashŠÖ”
-	 * ŠO‚©‚çƒL[‚ª“n‚³‚ê‚½‚ç’l‚ğ•Ô‚·
-	 * @param key ƒL[
+	 * Hashé–¢æ•°
+	 * å¤–ã‹ã‚‰ã‚­ãƒ¼ãŒæ¸¡ã•ã‚ŒãŸã‚‰å€¤ã‚’è¿”ã™
+	 * @param key ã‚­ãƒ¼
 	 */
 	public String Hashfunc(int key) {
 		return map.get(key);
 	}
 
 
+
+
 	/**
-	 * Hashmap.map‚©‚ç“Ç‚İ‚İAsyllmatch‚É‘Î‰‚µ‚½ipu‚Æsyllstart‚ªæ“¾‚Å‚«‚é‚Ì‚Å‚±‚ê‚ğset
-	 * ipuArraylist‚ÍQÆ“n‚µ‚È‚Ì‚ÅA‚»‚ê‚Ìsetƒƒ\ƒbƒh‚ğ“Ç‚İo‚µ‚Äset‚·‚ê‚ÎOK
+	 * Hashmap.mapã‹ã‚‰èª­ã¿è¾¼ã¿ã€syllmatchã«å¯¾å¿œã—ãŸipuã¨syllstartãŒå–å¾—ã§ãã‚‹ã®ã§ã“ã‚Œã‚’set
+	 * ipuArraylistã¯å‚ç…§æ¸¡ã—ãªã®ã§ã€ãã‚Œã®setãƒ¡ã‚½ãƒƒãƒ‰ã‚’èª­ã¿å‡ºã—ã¦setã™ã‚Œã°OK
 	 * @param ipuArraylist
 	 */
 	public static void setFrom_hash(ArrayList<Ipu> ipuArraylist, String directoryString){
 
-		// ƒRƒ“ƒXƒgƒ‰ƒNƒ^‚ğŒÄ‚Ño‚µ‚Ä"offline.info"‚©‚ç"Hashmap.map"‚ğì‚è“Ç‚İ‚ŞAŠù‚É‘¶İ‚µ‚Ä‚¢‚½‚ç‚»‚ê‚ğ“Ç‚İ‚ŞB
+		// ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ã‚’å‘¼ã³å‡ºã—ã¦"offline.info"ã‹ã‚‰"Hashmap.map"ã‚’ä½œã‚Šèª­ã¿è¾¼ã‚€ã€æ—¢ã«å­˜åœ¨ã—ã¦ã„ãŸã‚‰ãã‚Œã‚’èª­ã¿è¾¼ã‚€ã€‚
 		HashFromOffline hash = new HashFromOffline(directoryString, OFFLINE_INFO);
 
-
-		// "syllmatch"‚©‚ç"ipu,start"‚ª“¾‚ç‚ê‚é‚Ì‚ÅA","‚Åsplit‚µ‚ÄipuObject‚ÌƒZƒbƒ^[‚É“Š‚°‚é
+		// "syllmatch"ã‹ã‚‰"ipu,start"ãŒå¾—ã‚‰ã‚Œã‚‹ã®ã§ã€","ã§splitã—ã¦ipuObjectã®ã‚»ãƒƒã‚¿ãƒ¼ã«æŠ•ã’ã‚‹
 		String[] hogeStrings;
 		for(Ipu ipuObject : ipuArraylist){
 			hogeStrings = hash.Hashfunc(Integer.valueOf(ipuObject.get_syllMatch())).split(",");
 			ipuObject.set_ipu_syllStart(hogeStrings[0], hogeStrings[1]);
 		}
-
 		return;
 	}
+
 
 
 
@@ -187,7 +183,4 @@ public class HashFromOffline {
 	public static void main(String[] args) {
 		HashFromOffline hogeFromOffline = new HashFromOffline("preprocData", OFFLINE_INFO);
 	}
-
-
-
 }

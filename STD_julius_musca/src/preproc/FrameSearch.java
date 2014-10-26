@@ -14,11 +14,11 @@ public class FrameSearch {
 
 
 	public FrameSearch() {
-		// TODO ©“®¶¬‚³‚ê‚½ƒRƒ“ƒXƒgƒ‰ƒNƒ^[EƒXƒ^ƒu
+		// TODO è‡ªå‹•ç”Ÿæˆã•ã‚ŒãŸã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ãƒ¼ãƒ»ã‚¹ã‚¿ãƒ–
 	}
 
 	/**
-	 * matched_syll‚©‚çØ‚è”²‚­‚×‚«‰¹º‚ÌƒtƒŒ[ƒ€”Ô†‚ğ•Ô‚µ‚Ü‚·
+	 * matched_syllã‹ã‚‰åˆ‡ã‚ŠæŠœãã¹ãéŸ³å£°ã®ãƒ•ãƒ¬ãƒ¼ãƒ ç•ªå·ã‚’è¿”ã—ã¾ã™
 	 * @param ipuname
 	 * @param start
 	 * @param match
@@ -34,7 +34,7 @@ public class FrameSearch {
 		try {
 			String ipunumber = ipuname.split("_")[0];
 
-			if(!ipunumber.equals(oldipu.split("_")[0])) {	// XX-YY‚ªˆê’v‚µ‚Ä‚È‚¢‚Ì‚ÅV‚µ‚­ƒtƒ@ƒCƒ‹‚ğŠJ‚­	ˆÙ‚È‚éƒtƒ@ƒCƒ‹
+			if(!ipunumber.equals(oldipu.split("_")[0])) {	// XX-YYãŒä¸€è‡´ã—ã¦ãªã„ã®ã§æ–°ã—ããƒ•ã‚¡ã‚¤ãƒ«ã‚’é–‹ã	ç•°ãªã‚‹ãƒ•ã‚¡ã‚¤ãƒ«
 				//System.out.println("X");
 				inipuFileReader = new FileReader("/Users/takada/workspace/SDPWS/matched_syll/" + ipunumber + ".jout");
 				//inipuFileReader = new FileReader("/home/data/SDPWS/matched_syll/" + ipunumber + ".jout");
@@ -47,12 +47,12 @@ public class FrameSearch {
 				//System.out.println("in");
 				while (!bripuBufferedReader.readLine().endsWith(tempBuilder.toString()));
 				//tempBuilder.setLength(0);
-				while (!bripuBufferedReader.readLine().startsWith(" ----------------------------------------"));	// •K—v‚Ès‚Ü‚Å“Ç‚İ”ò‚Î‚µ
+				while (!bripuBufferedReader.readLine().startsWith(" ----------------------------------------"));	// å¿…è¦ãªè¡Œã¾ã§èª­ã¿é£›ã°ã—
 				//ystem.out.println("out");
 				bripuBufferedReader.mark(10240);
 
-			} else {	// XX-YY‚Íˆê’v‚µ‚Ä‚½@¨@“¯ƒtƒ@ƒCƒ‹“à‚Ìˆá‚¤ipu
-				if(!ipuname.equals(oldipu)) {	//XX-YY_ZZZZ‚ªˆÙ‚È‚Á‚Ä‚½‚ç
+			} else {	// XX-YYã¯ä¸€è‡´ã—ã¦ãŸã€€â†’ã€€åŒãƒ•ã‚¡ã‚¤ãƒ«å†…ã®é•ã†ipu
+				if(!ipuname.equals(oldipu)) {	//XX-YY_ZZZZãŒç•°ãªã£ã¦ãŸã‚‰
 					//System.out.println("Y");
 
 					// String string = ipuname + ".wav";
@@ -61,9 +61,9 @@ public class FrameSearch {
 
 					while (!bripuBufferedReader.readLine().endsWith(tempBuilder.toString()));
 					//tempBuilder.setLength(0);
-					while (!bripuBufferedReader.readLine().startsWith(" ----------------------------------------"));	// •K—v‚Ès‚Ü‚Å“Ç‚İ”ò‚Î‚µ
+					while (!bripuBufferedReader.readLine().startsWith(" ----------------------------------------"));	// å¿…è¦ãªè¡Œã¾ã§èª­ã¿é£›ã°ã—
 					bripuBufferedReader.mark(10240);
-				} else {	// XX-YY_ZZZZ‚Ü‚Åˆê’v@¨@“¯ƒtƒ@ƒCƒ‹“àA“¯ipu
+				} else {	// XX-YY_ZZZZã¾ã§ä¸€è‡´ã€€â†’ã€€åŒãƒ•ã‚¡ã‚¤ãƒ«å†…ã€åŒipu
 					//System.out.println("Z");
 					bripuBufferedReader.reset();
 				}
@@ -74,11 +74,11 @@ public class FrameSearch {
 			//			String line = null;
 			//			while ((line = br.readLine()) != "=== end forced alignment ===") {
 			//				//System.out.println(line);
-			//				String[] lineSplit = line.split("[ ,]");	//" "‚Æ","‚Å•¶‚ğsplit
+			//				String[] lineSplit = line.split("[ ,]");	//" "ã¨","ã§æ–‡ã‚’split
 			//			}
 
 
-			//—vŠm”F
+			//è¦ç¢ºèª
 			String matchFrame = null;
 			String endFrame = null;
 			String temp = null;
@@ -87,19 +87,19 @@ public class FrameSearch {
 			Integer intStart = Integer.valueOf(start);
 			Integer intEnd = Integer.valueOf(end);
 
-			// match - start ‰ñ”•ª‚¾‚¯“Ç‚İ”ò‚Î‚µ
+			// match - start å›æ•°åˆ†ã ã‘èª­ã¿é£›ã°ã—
 			for(int i=0; i < intMatch - intStart; i++)
 				bripuBufferedReader.readLine();
 
-			//matchFrame = bripuBufferedReader.readLine().substring(1,5); // 1‰ñˆÈã‘±‚­‹ó”’‚ÅsplitB‘O‘¤‚Ì”š‚ğmatchFrame‚É‚·‚é
-			temp = bripuBufferedReader.readLine(); // 1‰ñˆÈã‘±‚­‹ó”’‚ÅsplitB‘O‘¤‚Ì”š‚ğmatchFrame‚É‚·‚é
+			//matchFrame = bripuBufferedReader.readLine().substring(1,5); // 1å›ä»¥ä¸Šç¶šãç©ºç™½ã§splitã€‚å‰å´ã®æ•°å­—ã‚’matchFrameã«ã™ã‚‹
+			temp = bripuBufferedReader.readLine(); // 1å›ä»¥ä¸Šç¶šãç©ºç™½ã§splitã€‚å‰å´ã®æ•°å­—ã‚’matchFrameã«ã™ã‚‹
 			matchFrame = temp.substring(1,5).trim();
 
-			// ã‚ÅˆêŒÂ•ªi‚ñ‚Å‚é‚Ì‚Å end - match - 1‰ñ•ª“Ç‚İ”ò‚Î‚·
+			// ä¸Šã§ä¸€å€‹åˆ†é€²ã‚“ã§ã‚‹ã®ã§ end - match - 1å›åˆ†èª­ã¿é£›ã°ã™
 			for(int i=1; i < intEnd - intMatch; i++)
 				bripuBufferedReader.readLine();
 
-			// intEnd == intMatch ‚È‚çAV‚µ‚­s‚ğ“Ç‚İ‚Ü‚È‚¢
+			// intEnd == intMatch ãªã‚‰ã€æ–°ã—ãè¡Œã‚’èª­ã¿è¾¼ã¾ãªã„
 			if(intEnd == intMatch) {
 				endFrame = temp.substring(6,10).trim();
 			} else {
@@ -117,10 +117,10 @@ public class FrameSearch {
 
 
 		} catch (FileNotFoundException e) {
-			// TODO ©“®¶¬‚³‚ê‚½ catch ƒuƒƒbƒN
+			// TODO è‡ªå‹•ç”Ÿæˆã•ã‚ŒãŸ catch ãƒ–ãƒ­ãƒƒã‚¯
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO ©“®¶¬‚³‚ê‚½ catch ƒuƒƒbƒN
+			// TODO è‡ªå‹•ç”Ÿæˆã•ã‚ŒãŸ catch ãƒ–ãƒ­ãƒƒã‚¯
 			e.printStackTrace();
 		}
 
@@ -130,7 +130,7 @@ public class FrameSearch {
 
 
 	public static void setFrom_jout(ArrayList<Ipu> ipuArraylist) {
-		// TODO ©“®¶¬‚³‚ê‚½ƒƒ\ƒbƒhEƒXƒ^ƒu
+		// TODO è‡ªå‹•ç”Ÿæˆã•ã‚ŒãŸãƒ¡ã‚½ãƒƒãƒ‰ãƒ»ã‚¹ã‚¿ãƒ–
 
 
 
@@ -142,7 +142,7 @@ public class FrameSearch {
 		String endString = null;
 		String result[] = null;		// matchFrame + endFrame
 
-		String oldipu = "XX-YY_ZZZZ";	// ƒ_ƒ~[
+		String oldipu = "XX-YY_ZZZZ";	// ãƒ€ãƒŸãƒ¼
 
 		Ipu tempIpu = new Ipu();
 		for(int i=0; i<ipuArraylist.size(); i++){
@@ -163,8 +163,8 @@ public class FrameSearch {
 
 			tempIpu.set_frameStart_frameEnd(result[0], result[1]);
 
-			// ‚±‚±
-			//out.write(IDString + "," + ipuString + "," + result + "\n");
+			// ã“ã“
+			//out.write(IDString + "," + ipuString + "," + result + "Â¥n");
 
 			oldipu = ipuString;
 
@@ -174,7 +174,7 @@ public class FrameSearch {
 			inipuFileReader.close();
 			bripuBufferedReader.close();
 		} catch (IOException e) {
-			// TODO ©“®¶¬‚³‚ê‚½ catch ƒuƒƒbƒN
+			// TODO è‡ªå‹•ç”Ÿæˆã•ã‚ŒãŸ catch ãƒ–ãƒ­ãƒƒã‚¯
 			e.printStackTrace();
 		}
 	}

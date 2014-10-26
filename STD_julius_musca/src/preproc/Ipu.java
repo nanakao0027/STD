@@ -15,7 +15,7 @@ public class Ipu {
 
 
 	/**
-	 * ƒRƒ“ƒXƒgƒ‰ƒNƒ^ onlySDPWSdetect‚©‚ç“Ç‚İ‚Ş‚Æ‚«‚Ég—p‚·‚é
+	 * ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ onlySDPWSdetectã‹ã‚‰èª­ã¿è¾¼ã‚€ã¨ãã«ä½¿ç”¨ã™ã‚‹
 	 * @param IDString
 	 * @param matchString
 	 * @param endString
@@ -29,11 +29,11 @@ public class Ipu {
 	}
 
 	public Ipu() {
-		// TODO ©“®¶¬‚³‚ê‚½ƒRƒ“ƒXƒgƒ‰ƒNƒ^[EƒXƒ^ƒu
+		// TODO è‡ªå‹•ç”Ÿæˆã•ã‚ŒãŸã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ãƒ¼ãƒ»ã‚¹ã‚¿ãƒ–
 	}
 
 	/**
-	 * ipu‚Æsyll‚ÆsyllStart“ü—Í—pBhash‚©‚ç“Ç‚İ‚Ş‚Æ‚«‚Ég‚¤‚Æv‚¤B
+	 * ipuã¨syllã¨syllStartå…¥åŠ›ç”¨ã€‚hashã‹ã‚‰èª­ã¿è¾¼ã‚€ã¨ãã«ä½¿ã†ã¨æ€ã†ã€‚
 	 * @param ipuString
 	 * @param startString
 	 */
@@ -43,7 +43,7 @@ public class Ipu {
 	}
 
 	/**
-	 * frameStart‚ÆframeEnd“ü—Í—pB.jout‚©‚ç“Ç‚İ‚Ş‚Æ‚«‚Ég‚¤‚Æv‚¤B
+	 * frameStartã¨frameEndå…¥åŠ›ç”¨ã€‚.joutã‹ã‚‰èª­ã¿è¾¼ã‚€ã¨ãã«ä½¿ã†ã¨æ€ã†ã€‚
 	 * @param startString
 	 * @param endString
 	 */
@@ -52,7 +52,7 @@ public class Ipu {
 		this.frameEndString = endString;
 	}
 
-	// ˆÈ~AƒtƒB[ƒ‹ƒhæ“¾—p
+	// ä»¥é™ã€ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰å–å¾—ç”¨
 	public String get_ID() {
 		return IDString;
 	}
@@ -108,21 +108,21 @@ public class Ipu {
 
 
 /**
- * ƒ\[ƒg‚ÌÛ‚Ég—p‚·‚éBipuƒ\[ƒg—p
+ * ã‚½ãƒ¼ãƒˆã®éš›ã«ä½¿ç”¨ã™ã‚‹ã€‚ipuã‚½ãƒ¼ãƒˆç”¨
  *
  */
 class IpuComparator implements Comparator<Ipu> {
 
 	@Override
 	public int compare(Ipu fs1, Ipu fs2) {
-		// TODO ©“®¶¬‚³‚ê‚½ƒƒ\ƒbƒhEƒXƒ^ƒu
+		// TODO è‡ªå‹•ç”Ÿæˆã•ã‚ŒãŸãƒ¡ã‚½ãƒƒãƒ‰ãƒ»ã‚¹ã‚¿ãƒ–
 		return fs1.get_ipu().compareTo(fs2.get_ipu());
 	}
 
 }
 
 /**
- * ƒ\[ƒg‚ÌÛ‚Ég—p‚·‚éBIDƒ\[ƒg—p
+ * ã‚½ãƒ¼ãƒˆã®éš›ã«ä½¿ç”¨ã™ã‚‹ã€‚IDã‚½ãƒ¼ãƒˆç”¨
  * @author takada
  *
  */
@@ -130,7 +130,7 @@ class IdComparator implements Comparator<Ipu> {
 
 	@Override
 	public int compare(Ipu fs1, Ipu fs2) {
-		// TODO ©“®¶¬‚³‚ê‚½ƒƒ\ƒbƒhEƒXƒ^ƒu
+		// TODO è‡ªå‹•ç”Ÿæˆã•ã‚ŒãŸãƒ¡ã‚½ãƒƒãƒ‰ãƒ»ã‚¹ã‚¿ãƒ–
 		return fs1.get_ID().compareTo(fs2.get_ID());
 	}
 

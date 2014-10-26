@@ -16,18 +16,18 @@ import javax.sound.sampled.*;
 
 public class MakeWaveFile {
 
-	// ƒfƒBƒŒƒNƒgƒŠ‚Ìw’è‚È‚Ç‚Ég‚¤
+	// ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã®æŒ‡å®šãªã©ã«ä½¿ã†
 	private static String TARGET_STRING;
 
 
-	// wavƒtƒ@ƒCƒ‹‚ª“ü‚Á‚½ƒfƒBƒŒƒNƒgƒŠ‚Ìƒ‹[ƒgB‚ ‚Æ‚Åipu(07-01‚Æ‚©)‚ğ––”ö‚É‚­‚Á‚Â‚¯‚ÄƒfƒBƒŒƒNƒgƒŠw’è
-	private static final String ROOTDICSTRING_STRING = "/Users/takada/SDPWSspeech/";	// ƒ[ƒJƒ‹—p
-	//	private static final String ROOTDICSTRING_STRING = "/home/takada/newSTD/SDPWSspeech/";	// ƒT[ƒo—p
+	// wavãƒ•ã‚¡ã‚¤ãƒ«ãŒå…¥ã£ãŸãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã®ãƒ«ãƒ¼ãƒˆã€‚ã‚ã¨ã§ipu(07-01ã¨ã‹)ã‚’æœ«å°¾ã«ãã£ã¤ã‘ã¦ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªæŒ‡å®š
+	private static final String ROOTDICSTRING_STRING = "/Users/takada/SDPWSspeech/";	// ãƒ­ãƒ¼ã‚«ãƒ«ç”¨
+	//	private static final String ROOTDICSTRING_STRING = "/home/takada/newSTD/SDPWSspeech/";	// ã‚µãƒ¼ãƒç”¨
 
-	// o—Íƒtƒ@ƒCƒ‹‚Ìƒ‹[ƒgƒfƒBƒŒƒNƒgƒŠ‚ğw’è‚·‚é‚½‚ß‚Ì•¶š—ñB‚±‚Ì‚ ‚Æ‚ÉTARGET_STRING‚ª‘±‚­
-	//private static final String OUTPUTROOTDICSTRING_STRING = "/Users/takada/Documents/workspace/newSTD/wav-mfcc-Result/";	// ƒ[ƒJƒ‹—p
-	private static final String OUTPUTROOTDICSTRING_STRING = "/Users/takada/Documents/workspace/newSTD/test/";	// ƒ[ƒJƒ‹—p
-	//	private static final String OUTPUTROOTDICSTRING_STRING = "/home/takada/newSTD/wavOuput-root/"; // ƒT[ƒo—p
+	// å‡ºåŠ›ãƒ•ã‚¡ã‚¤ãƒ«ã®ãƒ«ãƒ¼ãƒˆãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã‚’æŒ‡å®šã™ã‚‹ãŸã‚ã®æ–‡å­—åˆ—ã€‚ã“ã®ã‚ã¨ã«TARGET_STRINGãŒç¶šã
+	//private static final String OUTPUTROOTDICSTRING_STRING = "/Users/takada/Documents/workspace/newSTD/wav-mfcc-Result/";	// ãƒ­ãƒ¼ã‚«ãƒ«ç”¨
+	private static final String OUTPUTROOTDICSTRING_STRING = "/Users/takada/Documents/workspace/newSTD/test/";	// ãƒ­ãƒ¼ã‚«ãƒ«ç”¨
+	//	private static final String OUTPUTROOTDICSTRING_STRING = "/home/takada/newSTD/wavOuput-root/"; // ã‚µãƒ¼ãƒç”¨
 
 
 
@@ -37,15 +37,15 @@ public class MakeWaveFile {
 
 		StringBuilder tempBuilder = new StringBuilder();
 
-		
+
 		//if(end.equals("pute") || start.equals("pute")) {
 			//System.out.println(ID + " , " + ipu + " , " + start + " , " + end);
 			//return;
 		//}
-		
-		
-		//@•½¬26”N7Œ31“ú@‰‹}ˆ—@”šˆÈŠO‚ª—ˆ‚½‚çƒŠƒWƒFƒNƒg
-		//”»’è‚·‚éƒpƒ^[ƒ“‚ğ¶¬
+
+
+		//ã€€å¹³æˆ26å¹´7æœˆ31æ—¥ã€€å¿œæ€¥å‡¦ç†ã€€æ•°å­—ä»¥å¤–ãŒæ¥ãŸã‚‰ãƒªã‚¸ã‚§ã‚¯ãƒˆ
+		//åˆ¤å®šã™ã‚‹ãƒ‘ã‚¿ãƒ¼ãƒ³ã‚’ç”Ÿæˆ
         Pattern p = Pattern.compile("^[0-9]*$");
         Matcher m = p.matcher(start);
         if(!m.find()) {
@@ -58,10 +58,10 @@ public class MakeWaveFile {
         	return;
         }
 
-		// ‘ÎÛwav‚ÌƒpƒX
+		// å¯¾è±¡wavã®ãƒ‘ã‚¹
 		tempBuilder.append(ROOTDICSTRING_STRING);	// rootDirectoryPATH
-		tempBuilder.append(ipu.substring(0,5));		// XX-YY ‚Ü‚Å
-		tempBuilder.append("/");					// 
+		tempBuilder.append(ipu.substring(0,5));		// XX-YY ã¾ã§
+		tempBuilder.append("/");					//
 		tempBuilder.append(ipu);					// XX-YY/XX-YY_ZZZZ
 		tempBuilder.append(".wav");					// XX-YY/XX-YY_ZZZZ.wav
 		String audioFilePathString = tempBuilder.toString();
@@ -73,32 +73,32 @@ public class MakeWaveFile {
 
 		byte[] temp = null;
 		AudioInputStream inAis = null;
-		AudioFormat frmt = null;	
+		AudioFormat frmt = null;
 		try {
-			// wav“Ç‚İ‚İ
+			// wavèª­ã¿è¾¼ã¿
 			inAis = AudioSystem.getAudioInputStream(new File(audioFilePathString));
-			frmt = inAis.getFormat();	// format‚Ì“Ç‚İo‚µ
+			frmt = inAis.getFormat();	// formatã®èª­ã¿å‡ºã—
 
-			// ƒf[ƒ^•”•ª‚Ì“Ç‚İ‚İ
+			// ãƒ‡ãƒ¼ã‚¿éƒ¨åˆ†ã®èª­ã¿è¾¼ã¿
 			temp = new byte[inAis.available()];
 			inAis.read(temp);
 		} catch (IOException e) {
-			// TODO ©“®¶¬‚³‚ê‚½ catch ƒuƒƒbƒN
+			// TODO è‡ªå‹•ç”Ÿæˆã•ã‚ŒãŸ catch ãƒ–ãƒ­ãƒƒã‚¯
 			e.printStackTrace();
 		} catch (UnsupportedAudioFileException e) {
-			// TODO ©“®¶¬‚³‚ê‚½ catch ƒuƒƒbƒN
+			// TODO è‡ªå‹•ç”Ÿæˆã•ã‚ŒãŸ catch ãƒ–ãƒ­ãƒƒã‚¯
 			e.printStackTrace();
 		} finally {
-			// temp‚Éƒf[ƒ^‚ğ“Ç‚İ‚İ
+			// tempã«ãƒ‡ãƒ¼ã‚¿ã‚’èª­ã¿è¾¼ã¿
 			try {
 				inAis.close();
 			} catch (IOException e) {
-				// TODO ©“®¶¬‚³‚ê‚½ catch ƒuƒƒbƒN
+				// TODO è‡ªå‹•ç”Ÿæˆã•ã‚ŒãŸ catch ãƒ–ãƒ­ãƒƒã‚¯
 				e.printStackTrace();
 			}
 		}
 
-		// •”•ªw’è‚µ‚ÄƒRƒs[Aend‚ª‚È‚º‚©Œ³‚Ìwavƒtƒ@ƒCƒ‹‚ğ’´‚¦‚Ä‚µ‚Ü‚¤‚±‚Æ‚ª‚ ‚é‚Ì‚ÅA’´‚¦‚È‚¢ê‡‚Ì‚İÀsAelse‚Å–â‘è‚Ìƒtƒ@ƒCƒ‹–¼‚ğo—Í‚µ‚Äreturn
+		// éƒ¨åˆ†æŒ‡å®šã—ã¦ã‚³ãƒ”ãƒ¼ã€endãŒãªãœã‹å…ƒã®wavãƒ•ã‚¡ã‚¤ãƒ«ã‚’è¶…ãˆã¦ã—ã¾ã†ã“ã¨ãŒã‚ã‚‹ã®ã§ã€è¶…ãˆãªã„å ´åˆã®ã¿å®Ÿè¡Œã€elseã§å•é¡Œã®ãƒ•ã‚¡ã‚¤ãƒ«åã‚’å‡ºåŠ›ã—ã¦return
 		byte[] data = null;
 		if(temp.length > Integer.valueOf(end)*320)
 			if(Integer.valueOf(start)*320 < Integer.valueOf(end)*320) {
@@ -113,25 +113,25 @@ public class MakeWaveFile {
 
 
 		InputStream in = null;
-		AudioInputStream ais = null; //ƒtƒŒ[ƒ€‚Ì”
-		// o—Í
+		AudioInputStream ais = null; //ãƒ•ãƒ¬ãƒ¼ãƒ ã®æ•°
+		// å‡ºåŠ›
 		try {
-			// ‘‚«‚İ
+			// æ›¸ãè¾¼ã¿
 			in = new ByteArrayInputStream(data);
 			ais = new AudioInputStream(in,	frmt, data.length/2);
 
 
-			// ƒI[ƒfƒBƒIƒtƒ@ƒCƒ‹‚Ìí—Ş‚ğw’è
+			// ã‚ªãƒ¼ãƒ‡ã‚£ã‚ªãƒ•ã‚¡ã‚¤ãƒ«ã®ç¨®é¡ã‚’æŒ‡å®š
 			AudioFileFormat.Type targetType = AudioFileFormat.Type.WAVE;
 
-			// o—ÍƒfƒBƒŒƒNƒgƒŠ
+			// å‡ºåŠ›ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒª
 			tempBuilder.append(OUTPUTROOTDICSTRING_STRING);
 			tempBuilder.append(TARGET_STRING);
 			tempBuilder.append("/wavDirectory");
 			File wavDirectory = new File(tempBuilder.toString());
 			tempBuilder.setLength(0);
 
-			// o—Íƒtƒ@ƒCƒ‹–¼
+			// å‡ºåŠ›ãƒ•ã‚¡ã‚¤ãƒ«å
 			tempBuilder.append(ID);
 			tempBuilder.append("_");
 			tempBuilder.append(ipu.substring(0,10));
@@ -146,23 +146,23 @@ public class MakeWaveFile {
 
 			AudioSystem.write(ais, targetType, outputFile);
 		} catch (IOException e) {
-			// TODO ©“®¶¬‚³‚ê‚½ catch ƒuƒƒbƒN
+			// TODO è‡ªå‹•ç”Ÿæˆã•ã‚ŒãŸ catch ãƒ–ãƒ­ãƒƒã‚¯
 			e.printStackTrace();
 		} finally {
 			try {
 				in.close();
 				ais.close();
 			} catch (IOException e) {
-				// TODO ©“®¶¬‚³‚ê‚½ catch ƒuƒƒbƒN
+				// TODO è‡ªå‹•ç”Ÿæˆã•ã‚ŒãŸ catch ãƒ–ãƒ­ãƒƒã‚¯
 				e.printStackTrace();
 			}
 		}
 
-		// mfcclist, wavToMfcclist‚ğì‚é
+		// mfcclist, wavToMfcclistã‚’ä½œã‚‹
 		try {
 			ListMake(ID, ipu, start, end);
 		} catch (IOException e) {
-			// TODO ©“®¶¬‚³‚ê‚½ catch ƒuƒƒbƒN
+			// TODO è‡ªå‹•ç”Ÿæˆã•ã‚ŒãŸ catch ãƒ–ãƒ­ãƒƒã‚¯
 			e.printStackTrace();
 		}
 
@@ -175,12 +175,12 @@ public class MakeWaveFile {
 		StringBuilder tempBuilder = new StringBuilder();
 
 
-		// Mfcc‚Ìlist
-		// o—Íæ
+		// Mfccã®list
+		// å‡ºåŠ›å…ˆ
 		File mfccDirectory = new File(OUTPUTROOTDICSTRING_STRING + TARGET_STRING + "/mfcclist");
 		File mfccFile = new File(mfccDirectory, ID + ".txt");
 
-		// ‘‚«‚Ş“à—e@mfcc‚ÌPATH
+		// æ›¸ãè¾¼ã‚€å†…å®¹ã€€mfccã®PATH
 		String mfcc = OUTPUTROOTDICSTRING_STRING + TARGET_STRING + "/mfcc/";
 		tempBuilder.append(mfcc);
 		tempBuilder.append(ID);
@@ -191,7 +191,7 @@ public class MakeWaveFile {
 		tempBuilder.append("_");
 		tempBuilder.append(end);
 		tempBuilder.append(".mfc");
-		tempBuilder.append("\n");
+		tempBuilder.append("Â¥n");
 		String mfccString =  tempBuilder.toString();
 		tempBuilder.setLength(0);
 
@@ -200,7 +200,7 @@ public class MakeWaveFile {
 
 			filewriter.write(mfccString);
 			filewriter.close();
-			// ’PŒêID‚É‘Î‰‚µ‚½ˆê——ƒtƒ@ƒCƒ‹‚ª‚È‚¯‚ê‚Îì‚éB
+			// å˜èªIDã«å¯¾å¿œã—ãŸä¸€è¦§ãƒ•ã‚¡ã‚¤ãƒ«ãŒãªã‘ã‚Œã°ä½œã‚‹ã€‚
 		}else{
 			FileWriter filewriter = new FileWriter(mfccFile);
 
@@ -212,12 +212,12 @@ public class MakeWaveFile {
 
 
 
-		// MfccSpacePlus‚Ìlist
-		// o—Íæ
+		// MfccSpacePlusã®list
+		// å‡ºåŠ›å…ˆ
 		File mfccSpacePluslistDirectory = new File(OUTPUTROOTDICSTRING_STRING + TARGET_STRING + "/mfccSpacePluslist");
 		File mfccSpacePluslistFile = new File(mfccSpacePluslistDirectory, ID + ".txt");
 
-		// ‘‚«‚Ş“à—e@mfccSpacePlus‚ÌPATH
+		// æ›¸ãè¾¼ã‚€å†…å®¹ã€€mfccSpacePlusã®PATH
 		String mfccSpacePlus = OUTPUTROOTDICSTRING_STRING + TARGET_STRING + "/mfccSpacePlus/";
 		tempBuilder.append(mfccSpacePlus);
 		tempBuilder.append(ID);
@@ -228,7 +228,7 @@ public class MakeWaveFile {
 		tempBuilder.append("_");
 		tempBuilder.append(end);
 		tempBuilder.append(".mfc");
-		tempBuilder.append("\n");
+		tempBuilder.append("Â¥n");
 		String mfccSpacePlusString =  tempBuilder.toString();
 		tempBuilder.setLength(0);
 
@@ -237,7 +237,7 @@ public class MakeWaveFile {
 
 			filewriter.write(mfccSpacePlusString);
 			filewriter.close();
-			// ’PŒêID‚É‘Î‰‚µ‚½ˆê——ƒtƒ@ƒCƒ‹‚ª‚È‚¯‚ê‚Îì‚éB
+			// å˜èªIDã«å¯¾å¿œã—ãŸä¸€è¦§ãƒ•ã‚¡ã‚¤ãƒ«ãŒãªã‘ã‚Œã°ä½œã‚‹ã€‚
 		}else{
 			FileWriter filewriter = new FileWriter(mfccSpacePluslistFile);
 
@@ -247,7 +247,7 @@ public class MakeWaveFile {
 
 
 
-		// wav to mfcc ‚ÌƒŠƒXƒg
+		// wav to mfcc ã®ãƒªã‚¹ãƒˆ
 		File wavToMfccDirectory = new File(OUTPUTROOTDICSTRING_STRING + TARGET_STRING + "/wavToMfcc");
 		File wavToMfccFile = new File(wavToMfccDirectory, ID + ".txt");
 		tempBuilder.append(OUTPUTROOTDICSTRING_STRING);
@@ -276,7 +276,7 @@ public class MakeWaveFile {
 
 			filewriter.write(string);
 			filewriter.close();
-			// ’PŒêID‚É‘Î‰‚µ‚½ˆê——ƒtƒ@ƒCƒ‹‚ª‚È‚¯‚ê‚Îì‚éB
+			// å˜èªIDã«å¯¾å¿œã—ãŸä¸€è¦§ãƒ•ã‚¡ã‚¤ãƒ«ãŒãªã‘ã‚Œã°ä½œã‚‹ã€‚
 		}else{
 			FileWriter filewriter = new FileWriter(wavToMfccFile);
 
@@ -288,7 +288,7 @@ public class MakeWaveFile {
 
 
 	/**
-	 * Às
+	 * å®Ÿè¡Œ
 	 * @param ipuArraylist
 	 */
 	public static void execute_wavCut(ArrayList<Ipu> ipuArraylist, String targetString) {
@@ -339,14 +339,14 @@ public class MakeWaveFile {
 			//			}
 
 		} catch (IOException e) {
-			// TODO ©“®¶¬‚³‚ê‚½ catch ƒuƒƒbƒN
+			// TODO è‡ªå‹•ç”Ÿæˆã•ã‚ŒãŸ catch ãƒ–ãƒ­ãƒƒã‚¯
 			e.printStackTrace();
 		} finally {
 			try {
 				inFileReader.close();
 				brBufferedReader.close();
 			} catch (IOException e) {
-				// TODO ©“®¶¬‚³‚ê‚½ catch ƒuƒƒbƒN
+				// TODO è‡ªå‹•ç”Ÿæˆã•ã‚ŒãŸ catch ãƒ–ãƒ­ãƒƒã‚¯
 				e.printStackTrace();
 			}
 		}
