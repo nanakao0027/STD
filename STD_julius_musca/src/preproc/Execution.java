@@ -1,5 +1,4 @@
 package preproc;
-import java.awt.List;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -26,6 +25,7 @@ public class Execution {
 	public static String TARGET_NAME;		// 入力ファイル
 	public static String DATA_DIRECTORY;	// 入力ファイルのディレクトリ
 	public static String RESULT_DIRECTORY = "preproc_Result"; // 結果を出力するディレクトリ
+	public static String OFFLINE_NAME;
 
 
 	/**
@@ -45,6 +45,7 @@ public class Execution {
 
 			TARGET_NAME = br.readLine();
 			DATA_DIRECTORY = br.readLine();
+			OFFLINE_NAME = br.readLine();
 
 
 		} catch (FileNotFoundException e) {
@@ -93,9 +94,12 @@ public class Execution {
 			String str = inputBufferedReader.readLine();
 			while(str != null){
 				if(str.split(",")[0].matches("[0-9][0-9][0-9]")) {
-					fileNumber = str.split(",")[0];			// ID�擾
+					fileNumber = str.split(",")[0];			// ID
 				}
-				else if(str.split(" ")[0].matches("processing_time:="));
+				else if(str.split(" ")[0].matches("total_processing_time:="))
+					break; // 終了
+				else if(str.split(" ")[0].matches("processing_time:="))
+					;//飛ばす
 				else {
 					hogeString = str.split(" ");
 					//							ID			match			end				DPScore
@@ -124,48 +128,6 @@ public class Execution {
 	}
 
 
-	/**
-	 * Frameが出し終わったところまででtxtに出力
-	 * @param ipuArraylist
-	 */
-	private void outputText_ID_ipu_startFrame_outFrame_DPscore(ArrayList<Ipu> ipuArraylist) {
-
-
-		FileWriter outFileWriter = null;
-
-		try {
-			outFileWriter = new FileWriter(new File("ID_ipu_startFrame_outFrame_DPscore-" + TARGET_NAME + ".txt"));
-
-			for(Ipu ipu : ipuArraylist){
-				StringBuilder stringBuilder = new StringBuilder();
-				stringBuilder.append(ipu.get_ID());
-				stringBuilder.append(",");
-				stringBuilder.append(ipu.get_ipu());
-				stringBuilder.append(",");
-				stringBuilder.append(ipu.get_frameStart());
-				stringBuilder.append(",");
-				stringBuilder.append(ipu.get_frameEnd());
-				stringBuilder.append(",");
-				stringBuilder.append(ipu.get_dpScore());
-				stringBuilder.append("\n");
-				outFileWriter.write(stringBuilder.toString());
-			}
-		} catch (IOException e) {
-			// TODO 自動生成された catch ブロック
-			e.printStackTrace();
-		} finally {
-			try {
-				outFileWriter.close();
-			} catch (IOException e) {
-				// TODO 自動生成された catch ブロック
-				e.printStackTrace();
-			}
-		}
-	}
-
-
-
-
 	private void outputText_ipu(ArrayList<Ipu> ipuArraylist, String stepString) {
 
 
@@ -176,6 +138,8 @@ public class Execution {
 
 			for(Ipu ipu : ipuArraylist){
 				StringBuilder stringBuilder = new StringBuilder();
+				stringBuilder.append(ipu.get_ID());
+				stringBuilder.append("_");
 				stringBuilder.append(ipu.get_ipu());
 				stringBuilder.append("\n");
 				outFileWriter.write(stringBuilder.toString());
@@ -195,18 +159,6 @@ public class Execution {
 
 
 
-
-	private void trasToUniqList(ArrayList<Ipu> ipuArraylist) {
-
-		// HashSetにipuArrayをぶち込む
-        Set<Ipu> set = new HashSet<Ipu>();
-        set.addAll(ipuArraylist);
-
-        ArrayList<Ipu> uniqueList = new ArrayList<Ipu>();
-        uniqueList.addAll(set);
-
-        outputText_ipu(uniqueList, "step5");
-	}
 
 	/**
 	 * @param args[0]
@@ -232,14 +184,14 @@ public class Execution {
 
 		// hashMAPを読み込んで、ipu,startを取得
 		System.out.println("step2 : Transform match-end number to ipu using Hash");
-		HashFromOffline.setFrom_hash(ipuArraylist, DATA_DIRECTORY);
+		HashFromOffline.setFrom_hash(ipuArraylist, DATA_DIRECTORY, OFFLINE_NAME);
 
 		// ここでsyllReject機能を実装する予定
 		// match==endならArraylistから除外する、など
 
 		// ipu順でソート
-		System.out.println("step3 : Sorting in ipu");
-		Collections.sort(ipuArraylist, new IpuComparator());
+		//System.out.println("step3 : Sorting in ipu");
+		//Collections.sort(ipuArraylist, new IpuComparator());
 
 		// ipuをテキストとして出力
 		System.out.println("step4 : ipu output to ./Temp");
