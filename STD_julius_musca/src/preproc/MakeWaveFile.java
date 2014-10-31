@@ -1,5 +1,6 @@
 package preproc;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -21,12 +22,12 @@ public class MakeWaveFile {
 
 
 	// wavファイルが入ったディレクトリのルート。あとでipu(07-01とか)を末尾にくっつけてディレクトリ指定
-	private static final String ROOTDICSTRING_STRING = "/Users/takada/SDPWSspeech/";	// ローカル用
+	public static String ROOTDICSTRING_STRING;// = "/Users/takada/SDPWSspeech/";	// ローカル用
 	//	private static final String ROOTDICSTRING_STRING = "/home/takada/newSTD/SDPWSspeech/";	// サーバ用
 
 	// 出力ファイルのルートディレクトリを指定するための文字列。このあとにTARGET_STRINGが続く
 	//private static final String OUTPUTROOTDICSTRING_STRING = "/Users/takada/Documents/workspace/newSTD/wav-mfcc-Result/";	// ローカル用
-	private static final String OUTPUTROOTDICSTRING_STRING = "/Users/takada/Documents/workspace/newSTD/test/";	// ローカル用
+	public static String OUTPUTROOTDICSTRING_STRING;// = "/Users/takada/Documents/workspace/newSTD/test/";	// ローカル用
 	//	private static final String OUTPUTROOTDICSTRING_STRING = "/home/takada/newSTD/wavOuput-root/"; // サーバ用
 
 
@@ -42,6 +43,11 @@ public class MakeWaveFile {
 			//System.out.println(ID + " , " + ipu + " , " + start + " , " + end);
 			//return;
 		//}
+
+		// FrameSearchでエラー処理したipuをパスする
+		// listもつくられない
+		if(start.equals("99999") && end.equals("99999"))
+			return;
 
 
 		//　平成26年7月31日　応急処理　数字以外が来たらリジェクト
@@ -60,6 +66,7 @@ public class MakeWaveFile {
 
 		// 対象wavのパス
 		tempBuilder.append(ROOTDICSTRING_STRING);	// rootDirectoryPATH
+		tempBuilder.append("/");
 		tempBuilder.append(ipu.substring(0,5));		// XX-YY まで
 		tempBuilder.append("/");					//
 		tempBuilder.append(ipu);					// XX-YY/XX-YY_ZZZZ
@@ -67,6 +74,7 @@ public class MakeWaveFile {
 		String audioFilePathString = tempBuilder.toString();
 		tempBuilder.setLength(0);
 
+		System.out.println(audioFilePathString);
 
 
 
@@ -126,6 +134,7 @@ public class MakeWaveFile {
 
 			// 出力ディレクトリ
 			tempBuilder.append(OUTPUTROOTDICSTRING_STRING);
+			tempBuilder.append("/");
 			tempBuilder.append(TARGET_STRING);
 			tempBuilder.append("/wavDirectory");
 			File wavDirectory = new File(tempBuilder.toString());
@@ -150,8 +159,10 @@ public class MakeWaveFile {
 			e.printStackTrace();
 		} finally {
 			try {
-				in.close();
-				ais.close();
+				if(in != null)
+					in.close();
+				if(ais != null)
+					ais.close();
 			} catch (IOException e) {
 				// TODO 自動生成された catch ブロック
 				e.printStackTrace();
@@ -172,115 +183,96 @@ public class MakeWaveFile {
 
 	private static void ListMake(String ID, String ipu, String start, String end) throws IOException {
 
-		StringBuilder tempBuilder = new StringBuilder();
+		// StringBuilder tempBuilder = new StringBuilder();
 
 
 		// Mfccのlist
 		// 出力先
-		File mfccDirectory = new File(OUTPUTROOTDICSTRING_STRING + TARGET_STRING + "/mfcclist");
+		File mfccDirectory = new File(OUTPUTROOTDICSTRING_STRING + "/" + TARGET_STRING + "/mfcclist");
 		File mfccFile = new File(mfccDirectory, ID + ".txt");
 
 		// 書き込む内容　mfccのPATH
-		String mfcc = OUTPUTROOTDICSTRING_STRING + TARGET_STRING + "/mfcc/";
-		tempBuilder.append(mfcc);
-		tempBuilder.append(ID);
-		tempBuilder.append("_");
-		tempBuilder.append(ipu.substring(0,10));
-		tempBuilder.append("_");
-		tempBuilder.append(start);
-		tempBuilder.append("_");
-		tempBuilder.append(end);
-		tempBuilder.append(".mfc");
-		tempBuilder.append("¥n");
-		String mfccString =  tempBuilder.toString();
-		tempBuilder.setLength(0);
+		String mfcc = OUTPUTROOTDICSTRING_STRING + "/" + TARGET_STRING + "/mfcc/";
+//		tempBuilder.append(mfcc);
+//		tempBuilder.append(ID);
+//		tempBuilder.append("_");
+//		tempBuilder.append(ipu.substring(0,10));
+//		tempBuilder.append("_");
+//		tempBuilder.append(start);
+//		tempBuilder.append("_");
+//		tempBuilder.append(end);
+//		tempBuilder.append(".mfc");
+
+		String mfccString = mfcc + ID + "_" + ipu.substring(0,10) + "_" + start + "_" + end + ".mfc";
+
+		// tempBuilder.append(System.getProperty("line.separator"));
+		// tempBuilder.append("\n");
+//		String mfccString =  tempBuilder.toString();
+//		tempBuilder.setLength(0);
 
 		if(mfccFile.exists()){
 			FileWriter filewriter = new FileWriter(mfccFile, true);
+			BufferedWriter bfBufferedWriter = new BufferedWriter(filewriter);
 
-			filewriter.write(mfccString);
+			bfBufferedWriter.write(mfccString);
+			bfBufferedWriter.newLine();
+			bfBufferedWriter.close();
 			filewriter.close();
 			// 単語IDに対応した一覧ファイルがなければ作る。
 		}else{
 			FileWriter filewriter = new FileWriter(mfccFile);
+			BufferedWriter bfBufferedWriter = new BufferedWriter(filewriter);
 
-			filewriter.write(mfccString);
-			filewriter.close();
-		}
-
-
-
-
-
-		// MfccSpacePlusのlist
-		// 出力先
-		File mfccSpacePluslistDirectory = new File(OUTPUTROOTDICSTRING_STRING + TARGET_STRING + "/mfccSpacePluslist");
-		File mfccSpacePluslistFile = new File(mfccSpacePluslistDirectory, ID + ".txt");
-
-		// 書き込む内容　mfccSpacePlusのPATH
-		String mfccSpacePlus = OUTPUTROOTDICSTRING_STRING + TARGET_STRING + "/mfccSpacePlus/";
-		tempBuilder.append(mfccSpacePlus);
-		tempBuilder.append(ID);
-		tempBuilder.append("_");
-		tempBuilder.append(ipu.substring(0,10));
-		tempBuilder.append("_");
-		tempBuilder.append(start);
-		tempBuilder.append("_");
-		tempBuilder.append(end);
-		tempBuilder.append(".mfc");
-		tempBuilder.append("¥n");
-		String mfccSpacePlusString =  tempBuilder.toString();
-		tempBuilder.setLength(0);
-
-		if(mfccSpacePluslistFile.exists()){
-			FileWriter filewriter = new FileWriter(mfccSpacePluslistFile, true);
-
-			filewriter.write(mfccSpacePlusString);
-			filewriter.close();
-			// 単語IDに対応した一覧ファイルがなければ作る。
-		}else{
-			FileWriter filewriter = new FileWriter(mfccSpacePluslistFile);
-
-			filewriter.write(mfccSpacePlusString);
+			bfBufferedWriter.write(mfccString);
+			bfBufferedWriter.newLine();
+			bfBufferedWriter.close();
 			filewriter.close();
 		}
 
 
 
 		// wav to mfcc のリスト
-		File wavToMfccDirectory = new File(OUTPUTROOTDICSTRING_STRING + TARGET_STRING + "/wavToMfcc");
+		File wavToMfccDirectory = new File(OUTPUTROOTDICSTRING_STRING + "/" + TARGET_STRING + "/wavToMfcc");
 		File wavToMfccFile = new File(wavToMfccDirectory, ID + ".txt");
-		tempBuilder.append(OUTPUTROOTDICSTRING_STRING);
-		tempBuilder.append(TARGET_STRING);
-		tempBuilder.append("/wavDirectory/");
-		String wavDirectoryPATHString =tempBuilder.toString();
-		tempBuilder.setLength(0);
+//		tempBuilder.append(OUTPUTROOTDICSTRING_STRING);
+//		tempBuilder.append("/");
+//		tempBuilder.append(TARGET_STRING);
+//		tempBuilder.append("/wavDirectory/");
+		String wavDirectoryPATHString = OUTPUTROOTDICSTRING_STRING + "/" + TARGET_STRING + "/wavDirectory/";
+//		tempBuilder.setLength(0);
 
 
-		StringBuilder stringBuilder = new StringBuilder();
-		stringBuilder.append(wavDirectoryPATHString);
-		stringBuilder.append(ID);
-		stringBuilder.append("_");
-		stringBuilder.append(ipu.substring(0,10));
-		stringBuilder.append("_");
-		stringBuilder.append(start);
-		stringBuilder.append("_");
-		stringBuilder.append(end);
-		stringBuilder.append(".wav");
-		stringBuilder.append("	");
-		stringBuilder.append(mfccString);
+//		StringBuilder stringBuilder = new StringBuilder();
+//		stringBuilder.append(wavDirectoryPATHString);
+//		stringBuilder.append(ID);
+//		stringBuilder.append("_");
+//		stringBuilder.append(ipu.substring(0,10));
+//		stringBuilder.append("_");
+//		stringBuilder.append(start);
+//		stringBuilder.append("_");
+//		stringBuilder.append(end);
+//		stringBuilder.append(".wav");
+//		stringBuilder.append("	");
+//		stringBuilder.append(mfccString);
 		//wavtomfcc
-		String string = stringBuilder.toString();
+//		String string = stringBuilder.toString();
+		String string = wavDirectoryPATHString + ID + "_" + ipu.substring(0,10) + "_" + start + "_" + end + ".wav	" + mfccString;
 		if(wavToMfccFile.exists()){
 			FileWriter filewriter = new FileWriter(wavToMfccFile, true);
+			BufferedWriter bfBufferedWriter = new BufferedWriter(filewriter);
 
-			filewriter.write(string);
+			bfBufferedWriter.write(string);
+			bfBufferedWriter.newLine();
+			bfBufferedWriter.close();
 			filewriter.close();
 			// 単語IDに対応した一覧ファイルがなければ作る。
 		}else{
 			FileWriter filewriter = new FileWriter(wavToMfccFile);
+			BufferedWriter bfBufferedWriter = new BufferedWriter(filewriter);
 
-			filewriter.write(string);
+			bfBufferedWriter.write(string);
+			bfBufferedWriter.newLine();
+			bfBufferedWriter.close();
 			filewriter.close();
 		}
 	}
@@ -291,15 +283,16 @@ public class MakeWaveFile {
 	 * 実行
 	 * @param ipuArraylist
 	 */
-	public static void execute_wavCut(ArrayList<Ipu> ipuArraylist, String targetString) {
+	public static void execute_wavCut(ArrayList<Ipu> ipuArraylist, String targetString, String rootString, String outputString) {
 
 		TARGET_STRING = targetString;
+		ROOTDICSTRING_STRING = rootString;
+		OUTPUTROOTDICSTRING_STRING = outputString;
+
 		MakeWaveFile hoge = new MakeWaveFile();
 
 		for(Ipu ipu : ipuArraylist){
-			//System.out.println(IDString);
 			hoge.createWav(ipu.get_ID(), ipu.get_ipu(), ipu.get_frameStart(), ipu.get_frameEnd());
-			//createWavSpaceFramePlused(IDString,ipuString, matchString,endString);
 		}
 	}
 
@@ -309,12 +302,15 @@ public class MakeWaveFile {
 		FileReader inFileReader = null;
 		BufferedReader brBufferedReader = null;
 
-		String target = "best1_229.detect";
+		ROOTDICSTRING_STRING = "../Data/SDPWS_speech";
+		OUTPUTROOTDICSTRING_STRING = "./wavOutput-root";
+
+		String target = "NTCIR11_best1_229_min000_threshold0.00.detect";
 		TARGET_STRING = target;
 		try {
-			inFileReader = new FileReader(new File("ID_ipu_startFrame_outFrame_DPscore-" + target + ".txt"));
+			inFileReader = new FileReader(new File("./preproc_Result", "05_Result" + target));
 			brBufferedReader = new BufferedReader(inFileReader);
-			System.out.println("Processing:" + inFileReader.toString());
+			// System.out.println("Processing:" + inFileReader.toString());
 
 			String hoge[] = null;
 			String buf = null;
@@ -323,7 +319,9 @@ public class MakeWaveFile {
 
 			while(buf != null) {
 				hoge = buf.split(",");
-				if(Integer.valueOf(hoge[0]) > 231)
+
+				// デバッグ
+				// if(Integer.valueOf(hoge[0]) > 68)
 					hogeMakeWaveFile.createWav(hoge[0], hoge[1], hoge[2], hoge[3]);
 
 				buf = brBufferedReader.readLine();

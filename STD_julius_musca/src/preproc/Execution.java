@@ -5,7 +5,8 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  * DTWの結果ファイル(.detect or threshold0.XX)をjuliusに渡すための音声ファイルリストに変換する
@@ -24,8 +25,11 @@ public class Execution {
 
 	public static String TARGET_NAME;		// 入力ファイル
 	public static String DATA_DIRECTORY;	// 入力ファイルのディレクトリ
-	public static String RESULT_DIRECTORY = "preproc_Result"; // 結果を出力するディレクトリ
-	public static String OFFLINE_NAME;
+	public static String RESULT_DIRECTORY;	// 結果を出力するディレクトリ
+	public static String OFFLINE_NAME;		// offline.infoの名前
+	public static String SDPWS_SPEECH_DIRECTORY;	// SDPWSの音声データが置いてあるディレクトリ
+	public static String SDPWS_MATCHED_SYLL_DIRECTORY;	// SDPWSのjoutが置いてあるディレクトリ
+	public static String WAV_LIST_DIRECTORY;	// SDPWSのjoutが置いてあるディレクトリ
 
 
 	/**
@@ -45,7 +49,11 @@ public class Execution {
 
 			TARGET_NAME = br.readLine();
 			DATA_DIRECTORY = br.readLine();
+			RESULT_DIRECTORY = br.readLine();
 			OFFLINE_NAME = br.readLine();
+			SDPWS_SPEECH_DIRECTORY = br.readLine();
+			SDPWS_MATCHED_SYLL_DIRECTORY = br.readLine();
+			WAV_LIST_DIRECTORY = br.readLine();
 
 
 		} catch (FileNotFoundException e) {
@@ -128,6 +136,12 @@ public class Execution {
 	}
 
 
+
+	/**
+	 * IDとipuをテキストにアウト
+	 * @param ipuArraylist
+	 * @param stepString
+	 */
 	private void outputText_ipu(ArrayList<Ipu> ipuArraylist, String stepString) {
 
 
@@ -161,6 +175,49 @@ public class Execution {
 
 
 	/**
+	 * IDとipuとstartFrameとoutFrameとDPscoreをテキストにアウト
+	 * @param ipuArraylist
+	 * @param stepString
+	 */
+	private void ouputText_ID_ipu_startFrame_outFrame_DPscore(ArrayList<Ipu> ipuArraylist, String targetString) {
+
+
+		FileWriter outFileWriter = null;
+
+		try {
+			outFileWriter = new FileWriter(new File(RESULT_DIRECTORY, targetString));
+
+			for(Ipu ipu : ipuArraylist){
+				StringBuilder stringBuilder = new StringBuilder();
+				stringBuilder.append(ipu.get_ID());
+				stringBuilder.append(",");
+				stringBuilder.append(ipu.get_ipu());
+				stringBuilder.append(",");
+				stringBuilder.append(ipu.get_frameStart());
+				stringBuilder.append(",");
+				stringBuilder.append(ipu.get_frameEnd());
+				stringBuilder.append(",");
+				stringBuilder.append(ipu.get_dpScore());
+				stringBuilder.append("\n");
+				outFileWriter.write(stringBuilder.toString());
+			}
+		} catch (IOException e) {
+			// TODO 自動生成された catch ブロック
+			e.printStackTrace();
+		} finally {
+			try {
+				outFileWriter.close();
+			} catch (IOException e) {
+				// TODO 自動生成された catch ブロック
+				e.printStackTrace();
+			}
+		}
+	}
+
+
+
+
+	/**
 	 * @param args[0]
 	 */
 	public static void main(String[] args) {
@@ -171,31 +228,32 @@ public class Execution {
 			return;
 		}
 
+		int steps=0;
 		String confString = args[0];
 
 		// 設定ファイルの読み込み、ArrayList初期化
-		System.out.println("step0 : Use " + confString);
+		System.out.println("step " + steps++ + " : Use " + confString);
 		Execution stdDexecution = new Execution(confString);
 		ArrayList<Ipu> ipuArraylist = new ArrayList<Ipu>();
 
 		// targetFileから読み込み、ID,match,end,DPscoreを取得
-		System.out.println("step1 : ipuArrayList setup from Detect file");
+		System.out.println("step " + steps++ + " : ipuArrayList setup from Detect file");
 		ipuArraylist = stdDexecution.setFrom_onlyDetect(TARGET_NAME, DATA_DIRECTORY);
 
 		// hashMAPを読み込んで、ipu,startを取得
-		System.out.println("step2 : Transform match-end number to ipu using Hash");
+		System.out.println("step " + steps++ + " : Transform match-end number to ipu using Hash");
 		HashFromOffline.setFrom_hash(ipuArraylist, DATA_DIRECTORY, OFFLINE_NAME);
 
 		// ここでsyllReject機能を実装する予定
 		// match==endならArraylistから除外する、など
 
 		// ipu順でソート
-		//System.out.println("step3 : Sorting in ipu");
-		//Collections.sort(ipuArraylist, new IpuComparator());
+		System.out.println("step " + steps++ + " : Sorting in ipu");
+	    Collections.sort(ipuArraylist, new IpuComparator());
 
 		// ipuをテキストとして出力
-		System.out.println("step4 : ipu output to ./Temp");
-		stdDexecution.outputText_ipu(ipuArraylist, "step4");
+		System.out.println("step " + steps++ + " : ipu output to ./Temp");
+		stdDexecution.outputText_ipu(ipuArraylist, "step" + steps);
 
 		// ipuを一意にして出力
 		//System.out.println("step5 : Uniq ipu output to ./" + RESULT_DIRECTORY);
@@ -204,21 +262,21 @@ public class Execution {
 		/**
 		 * 言語モデルを使ってjuliusを動かす場合は要らない　2014/10/25
 		 */
-		/*
+
 		// 認識結果(*.jout)からstartFrameとendFrameを取得
-		System.out.println("step4:setFrom_jout");
-		FrameSearch.setFrom_jout(ipuArraylist);
+		System.out.println("step " + steps++ + " : Get start-end Frames from jout");
+		FrameSearch.setFrom_jout(ipuArraylist, SDPWS_MATCHED_SYLL_DIRECTORY);
 
 
 		// ここでひとまず結果をテキスト出力（後のスコア正規化で使用）
-		System.out.println("step5:textout");
+		System.out.println("step " + steps++ + " : extout");
 		Collections.sort(ipuArraylist, new IdComparator());	//ID昇順
-		stdDexecution.outputText_ID_ipu_startFrame_outFrame_DPscore(ipuArraylist);
+		stdDexecution.ouputText_ID_ipu_startFrame_outFrame_DPscore(ipuArraylist, "05_Result" + TARGET_NAME);
 		//
 
 		// wavファイルを読み込んで、切り抜いてディレクトリに出力
-		System.out.println("step6:output_wavfile");
-		MakeWaveFile.execute_wavCut(ipuArraylist, TARGET_NAME);
+		System.out.println("step " + steps++ + " : output_wavfile");
+		MakeWaveFile.execute_wavCut(ipuArraylist, TARGET_NAME, SDPWS_SPEECH_DIRECTORY, WAV_LIST_DIRECTORY);
 
 
 
@@ -227,8 +285,8 @@ public class Execution {
 		for(Ipu ipuObject : ipuArraylist){
 			System.out.println(ipuObject.get_all_withDelimiter(","));
 		}
-		System.out.println("行数" + ipuArraylist.size());
-		*/
+		System.out.println("Num of canditates : " + ipuArraylist.size());
+
 
 	}
 }

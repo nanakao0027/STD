@@ -10,6 +10,7 @@ public class FrameSearch {
 
 	private static FileReader inipuFileReader = null;
 	private static BufferedReader bripuBufferedReader = null;
+	public static Boolean failed=false;
 
 
 
@@ -25,9 +26,11 @@ public class FrameSearch {
 	 * @param end
 	 * @return matchFrame,endFrame
 	 */
-	private String FrameSearchFromMatchedSyll(String oldipu, String ipuname, String start, String match, String end) {
+	private String FrameSearchFromMatchedSyll(String oldipu, String ipuname, String start, String match, String end, String joutString) {
 
 		String retString = null;
+		String hogeString = null;
+
 		StringBuilder retBuilder = new StringBuilder();
 		StringBuilder tempBuilder = new StringBuilder();
 
@@ -35,8 +38,11 @@ public class FrameSearch {
 			String ipunumber = ipuname.split("_")[0];
 
 			if(!ipunumber.equals(oldipu.split("_")[0])) {	// XX-YYが一致してないので新しくファイルを開く	異なるファイル
+
+				failed=false; // ipuが変わったのでfailedをfalseにリセット
+
 				//System.out.println("X");
-				inipuFileReader = new FileReader("/Users/takada/workspace/SDPWS/matched_syll/" + ipunumber + ".jout");
+				inipuFileReader = new FileReader(joutString + "/" + ipunumber + ".jout");
 				//inipuFileReader = new FileReader("/home/data/SDPWS/matched_syll/" + ipunumber + ".jout");
 				bripuBufferedReader = new BufferedReader(inipuFileReader);
 
@@ -47,7 +53,18 @@ public class FrameSearch {
 				//System.out.println("in");
 				while (!bripuBufferedReader.readLine().endsWith(tempBuilder.toString()));
 				//tempBuilder.setLength(0);
-				while (!bripuBufferedReader.readLine().startsWith(" ----------------------------------------"));	// 必要な行まで読み飛ばし
+
+				// 必要な行まで読み飛ばし
+				bripuBufferedReader.mark(10240);
+				while (!(hogeString=bripuBufferedReader.readLine()).startsWith(" ----------------------------------------")) {
+					// 認識が失敗している場合があるので0を返す
+					if(hogeString.startsWith("<search failed>")){
+						failed=true;
+						bripuBufferedReader.reset(); //~~~.wavのところまでbufferをもどす
+						return "99999,99999";
+					}
+				}
+
 				//ystem.out.println("out");
 				bripuBufferedReader.mark(10240);
 
@@ -55,17 +72,32 @@ public class FrameSearch {
 				if(!ipuname.equals(oldipu)) {	//XX-YY_ZZZZが異なってたら
 					//System.out.println("Y");
 
+					failed=false; // ipuが変わったのでfailedをfalseにリセット
+
 					// String string = ipuname + ".wav";
 					tempBuilder.append(ipuname);
 					tempBuilder.append(".wav");
 
 					while (!bripuBufferedReader.readLine().endsWith(tempBuilder.toString()));
 					//tempBuilder.setLength(0);
-					while (!bripuBufferedReader.readLine().startsWith(" ----------------------------------------"));	// 必要な行まで読み飛ばし
+
+					// 必要な行まで読み飛ばし
+					bripuBufferedReader.mark(10240);
+					while (!(hogeString=bripuBufferedReader.readLine()).startsWith(" ----------------------------------------")) {
+						// 認識が失敗している場合があるので0を返す
+						if(hogeString.startsWith("<search failed>")){
+							failed=true;
+							bripuBufferedReader.reset(); //~~~.wavのところまでbufferをもどす
+							return "99999,99999";
+						}
+					}
 					bripuBufferedReader.mark(10240);
 				} else {	// XX-YY_ZZZZまで一致　→　同ファイル内、同ipu
 					//System.out.println("Z");
 					bripuBufferedReader.reset();
+
+					if(failed == true)
+						return "99999,99999";
 				}
 
 			}
@@ -107,10 +139,16 @@ public class FrameSearch {
 				endFrame = endFrame.trim();
 			}
 
-
-			retBuilder.append(matchFrame);
-			retBuilder.append(",");
-			retBuilder.append(endFrame);
+			if(failed == true){
+				retBuilder.append(0);
+				retBuilder.append(",");
+				retBuilder.append(0);
+				failed = false;
+			} else {
+				retBuilder.append(matchFrame);
+				retBuilder.append(",");
+				retBuilder.append(endFrame);
+			}
 
 			retString = retBuilder.toString();
 			//retBuilder.setLength(0);
@@ -129,7 +167,7 @@ public class FrameSearch {
 	}
 
 
-	public static void setFrom_jout(ArrayList<Ipu> ipuArraylist) {
+	public static void setFrom_jout(ArrayList<Ipu> ipuArraylist, String joutString) {
 		// TODO 自動生成されたメソッド・スタブ
 
 
@@ -158,7 +196,7 @@ public class FrameSearch {
 			System.out.println(ipuString + "," +  startString + "," +  matchString + "," +  endString);
 
 
-			result = frameSearch.FrameSearchFromMatchedSyll(oldipu, ipuString, startString, matchString, endString).split(",");
+			result = frameSearch.FrameSearchFromMatchedSyll(oldipu, ipuString, startString, matchString, endString, joutString).split(",");
 
 
 			tempIpu.set_frameStart_frameEnd(result[0], result[1]);
@@ -178,4 +216,5 @@ public class FrameSearch {
 			e.printStackTrace();
 		}
 	}
+
 }
