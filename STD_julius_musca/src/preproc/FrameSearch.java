@@ -3,19 +3,24 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
 
 
 public class FrameSearch {
 
-	private static FileReader inipuFileReader = null;
-	private static BufferedReader bripuBufferedReader = null;
-	public static Boolean failed=false;
+	// joutがあるディレクトリ名
+	private String joutString;
+
+
+	private FileReader inipuFileReader = null;
+	private BufferedReader bripuBufferedReader = null;
+	private Boolean failed=false;
 
 
 
-	public FrameSearch() {
+	public FrameSearch(String joutString) {
 		// TODO 自動生成されたコンストラクター・スタブ
+
+		this.joutString = joutString;
 	}
 
 	/**
@@ -26,7 +31,7 @@ public class FrameSearch {
 	 * @param end
 	 * @return matchFrame,endFrame
 	 */
-	private String FrameSearchFromMatchedSyll(String oldipu, String ipuname, String start, String match, String end, String joutString) {
+	public String FrameSearchFromMatchedSyll(String oldipu, String ipuname, String start, String match, String end) {
 
 		String retString = null;
 		String hogeString = null;
@@ -164,57 +169,6 @@ public class FrameSearch {
 
 		return retString;
 
-	}
-
-
-	public static void setFrom_jout(ArrayList<Ipu> ipuArraylist, String joutString) {
-		// TODO 自動生成されたメソッド・スタブ
-
-
-
-		FrameSearch frameSearch = new FrameSearch();
-
-		String ipuString = null;
-		String startString = null;
-		String matchString = null;
-		String endString = null;
-		String result[] = null;		// matchFrame + endFrame
-
-		String oldipu = "XX-YY_ZZZZ";	// ダミー
-
-		Ipu tempIpu = new Ipu();
-		for(int i=0; i<ipuArraylist.size(); i++){
-
-			tempIpu = ipuArraylist.get(i);
-			ipuString = tempIpu.get_ipu();
-			startString = tempIpu.get_syllStart();
-			matchString = tempIpu.get_syllMatch();
-			endString = tempIpu.get_syllEnd();
-			result = null;		// matchFrame + endFrame
-
-			//System.out.println(hoge[0]);
-			System.out.println(ipuString + "," +  startString + "," +  matchString + "," +  endString);
-
-
-			result = frameSearch.FrameSearchFromMatchedSyll(oldipu, ipuString, startString, matchString, endString, joutString).split(",");
-
-
-			tempIpu.set_frameStart_frameEnd(result[0], result[1]);
-
-			// ここ
-			//out.write(IDString + "," + ipuString + "," + result + "¥n");
-
-			oldipu = ipuString;
-
-		}
-
-		try {
-			inipuFileReader.close();
-			bripuBufferedReader.close();
-		} catch (IOException e) {
-			// TODO 自動生成された catch ブロック
-			e.printStackTrace();
-		}
 	}
 
 }

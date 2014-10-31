@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.io.File;
 import java.io.InputStream;
 import java.io.ByteArrayInputStream;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -18,20 +17,22 @@ import javax.sound.sampled.*;
 public class MakeWaveFile {
 
 	// ディレクトリの指定などに使う
-	private static String TARGET_STRING;
+	private String TARGET_STRING;
 
 
 	// wavファイルが入ったディレクトリのルート。あとでipu(07-01とか)を末尾にくっつけてディレクトリ指定
-	public static String ROOTDICSTRING_STRING;// = "/Users/takada/SDPWSspeech/";	// ローカル用
-	//	private static final String ROOTDICSTRING_STRING = "/home/takada/newSTD/SDPWSspeech/";	// サーバ用
+	public String ROOTDICSTRING_STRING;
 
 	// 出力ファイルのルートディレクトリを指定するための文字列。このあとにTARGET_STRINGが続く
-	//private static final String OUTPUTROOTDICSTRING_STRING = "/Users/takada/Documents/workspace/newSTD/wav-mfcc-Result/";	// ローカル用
-	public static String OUTPUTROOTDICSTRING_STRING;// = "/Users/takada/Documents/workspace/newSTD/test/";	// ローカル用
-	//	private static final String OUTPUTROOTDICSTRING_STRING = "/home/takada/newSTD/wavOuput-root/"; // サーバ用
+	public String OUTPUTROOTDICSTRING_STRING;
 
 
-
+	public MakeWaveFile(String targetString, String rootString, String outString) {
+		// TODO 自動生成されたコンストラクター・スタブ
+		this.TARGET_STRING = targetString;
+		this.ROOTDICSTRING_STRING = rootString;
+		this.OUTPUTROOTDICSTRING_STRING = outString;
+	}
 
 
 	public void createWav(String ID, String ipu, String start, String end)  {
@@ -181,7 +182,7 @@ public class MakeWaveFile {
 	}
 
 
-	private static void ListMake(String ID, String ipu, String start, String end) throws IOException {
+	private void ListMake(String ID, String ipu, String start, String end) throws IOException {
 
 		// StringBuilder tempBuilder = new StringBuilder();
 
@@ -279,22 +280,7 @@ public class MakeWaveFile {
 
 
 
-	/**
-	 * 実行
-	 * @param ipuArraylist
-	 */
-	public static void execute_wavCut(ArrayList<Ipu> ipuArraylist, String targetString, String rootString, String outputString) {
 
-		TARGET_STRING = targetString;
-		ROOTDICSTRING_STRING = rootString;
-		OUTPUTROOTDICSTRING_STRING = outputString;
-
-		MakeWaveFile hoge = new MakeWaveFile();
-
-		for(Ipu ipu : ipuArraylist){
-			hoge.createWav(ipu.get_ID(), ipu.get_ipu(), ipu.get_frameStart(), ipu.get_frameEnd());
-		}
-	}
 
 
 	public static void main(String[] args) {
@@ -302,11 +288,11 @@ public class MakeWaveFile {
 		FileReader inFileReader = null;
 		BufferedReader brBufferedReader = null;
 
-		ROOTDICSTRING_STRING = "../Data/SDPWS_speech";
-		OUTPUTROOTDICSTRING_STRING = "./wavOutput-root";
+		String ROOTDICSTRING_STRING = "../Data/SDPWS_speech";
+		String OUTPUTROOTDICSTRING_STRING = "./wavOutput-root";
 
 		String target = "NTCIR11_best1_229_min000_threshold0.00.detect";
-		TARGET_STRING = target;
+		String TARGET_STRING = target;
 		try {
 			inFileReader = new FileReader(new File("./preproc_Result", "05_Result" + target));
 			brBufferedReader = new BufferedReader(inFileReader);
@@ -314,7 +300,7 @@ public class MakeWaveFile {
 
 			String hoge[] = null;
 			String buf = null;
-			MakeWaveFile hogeMakeWaveFile = new MakeWaveFile();
+			MakeWaveFile hogeMakeWaveFile = new MakeWaveFile(TARGET_STRING, ROOTDICSTRING_STRING, OUTPUTROOTDICSTRING_STRING);
 			buf = brBufferedReader.readLine();
 
 			while(buf != null) {

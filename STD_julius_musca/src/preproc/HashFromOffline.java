@@ -8,19 +8,15 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.ArrayList;
 import java.util.HashMap;
 
 public class HashFromOffline {
 
 	private HashMap<Integer, String> map = new HashMap<Integer, String>(); // 内部で持つhashテーブル
 
-	// 音節番号とipuの対応を取るファイル
-	public static String OFFLINE_INFO; //="offline_NTCIR10.info";
-
 	// offline.infoから作成するhashファイル。名前はこれに固定。
 	// ？？他のoffline.infoを扱う場合にはまた変更が必要
-	public static String HASH_NAME; //="Hashmap.map";
+	private String HASH_NAME; //="Hashmap.map";
 
 
 
@@ -31,9 +27,8 @@ public class HashFromOffline {
 	 * @param directoryString 入力ファイルのあるディレクトリ
 	 * offline.info から hashテーブルを作り保存する
 	 */
-	private HashFromOffline(String directoryString, String offlinefilename) {
+	HashFromOffline(String directoryString, String offlinefilename) {
 
-		OFFLINE_INFO=offlinefilename;
 		HASH_NAME=offlinefilename.replace("info", "map");
 
 		BufferedReader br = null;
@@ -158,32 +153,12 @@ public class HashFromOffline {
 
 
 
-	/**
-	 * Hashmap.mapから読み込み、syllmatchに対応したipuとsyllstartが取得できるのでこれをset
-	 * ipuArraylistは参照渡しなので、それのsetメソッドを読み出してsetすればOK
-	 * @param ipuArraylist
-	 */
-	public static void setFrom_hash(ArrayList<Ipu> ipuArraylist, String directoryString, String offlineString){
-
-		// コンストラクタを呼び出して"offline.info"から"Hashmap.map"を作り読み込む、既に存在していたらそれを読み込む。
-		HashFromOffline hash = new HashFromOffline(directoryString, offlineString);
-
-		// "syllmatch"から"ipu,start"が得られるので、","でsplitしてipuObjectのセッターに投げる
-		String[] hogeStrings;
-		for(Ipu ipuObject : ipuArraylist){
-			hogeStrings = hash.Hashfunc(Integer.valueOf(ipuObject.get_syllMatch())).split(",");
-			ipuObject.set_ipu_syllStart(hogeStrings[0], hogeStrings[1]);
-		}
-		return;
-	}
-
-
 
 
 	/**
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		new HashFromOffline("preprocData", OFFLINE_INFO);
+		new HashFromOffline("preprocData", "");
 	}
 }

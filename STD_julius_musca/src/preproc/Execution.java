@@ -23,13 +23,14 @@ import java.util.Collections;
  */
 public class Execution {
 
-	public static String TARGET_NAME;		// 入力ファイル
-	public static String DATA_DIRECTORY;	// 入力ファイルのディレクトリ
-	public static String RESULT_DIRECTORY;	// 結果を出力するディレクトリ
-	public static String OFFLINE_NAME;		// offline.infoの名前
-	public static String SDPWS_SPEECH_DIRECTORY;	// SDPWSの音声データが置いてあるディレクトリ
-	public static String SDPWS_MATCHED_SYLL_DIRECTORY;	// SDPWSのjoutが置いてあるディレクトリ
-	public static String WAV_LIST_DIRECTORY;	// SDPWSのjoutが置いてあるディレクトリ
+	private String TARGET_NAME;		// 入力ファイル
+	private String DATA_DIRECTORY;	// 入力ファイルのディレクトリ
+	private String RESULT_DIRECTORY;	// 結果を出力するディレクトリ
+	private String OFFLINE_NAME;		// offline.infoの名前
+	private String SDPWS_SPEECH_DIRECTORY;	// SDPWSの音声データが置いてあるディレクトリ
+	private String SDPWS_MATCHED_SYLL_DIRECTORY;	// SDPWSのjoutが置いてあるディレクトリ
+	private String WAV_LIST_DIRECTORY;	// SDPWSのjoutが置いてあるディレクトリ
+
 
 
 	/**
@@ -47,13 +48,13 @@ public class Execution {
 			in = new FileReader(inputfilename);
 			br = new BufferedReader(in);
 
-			TARGET_NAME = br.readLine();
-			DATA_DIRECTORY = br.readLine();
-			RESULT_DIRECTORY = br.readLine();
-			OFFLINE_NAME = br.readLine();
-			SDPWS_SPEECH_DIRECTORY = br.readLine();
-			SDPWS_MATCHED_SYLL_DIRECTORY = br.readLine();
-			WAV_LIST_DIRECTORY = br.readLine();
+			this.TARGET_NAME = br.readLine();
+			this.DATA_DIRECTORY = br.readLine();
+			this.RESULT_DIRECTORY = br.readLine();
+			this.OFFLINE_NAME = br.readLine();
+			this.SDPWS_SPEECH_DIRECTORY = br.readLine();
+			this.SDPWS_MATCHED_SYLL_DIRECTORY = br.readLine();
+			this.WAV_LIST_DIRECTORY = br.readLine();
 
 
 		} catch (FileNotFoundException e) {
@@ -147,16 +148,22 @@ public class Execution {
 
 		FileWriter outFileWriter = null;
 
+		String outString;
+
 		try {
 			outFileWriter = new FileWriter(new File("Temp", stepString + ".temp"));
 
 			for(Ipu ipu : ipuArraylist){
-				StringBuilder stringBuilder = new StringBuilder();
-				stringBuilder.append(ipu.get_ID());
-				stringBuilder.append("_");
-				stringBuilder.append(ipu.get_ipu());
-				stringBuilder.append("\n");
-				outFileWriter.write(stringBuilder.toString());
+
+				outString = ipu.get_ID() + "_" + ipu.get_ipu() + System.getProperty("line.separator");
+				outFileWriter.write(outString);
+
+//				StringBuilder stringBuilder = new StringBuilder();
+//				stringBuilder.append(ipu.get_ID());
+//				stringBuilder.append("_");
+//				stringBuilder.append(ipu.get_ipu());
+//				stringBuilder.append("\n");
+//				outFileWriter.write(stringBuilder.toString());
 			}
 		} catch (IOException e) {
 			// TODO 自動生成された catch ブロック
@@ -179,27 +186,25 @@ public class Execution {
 	 * @param ipuArraylist
 	 * @param stepString
 	 */
-	private void ouputText_ID_ipu_startFrame_outFrame_DPscore(ArrayList<Ipu> ipuArraylist, String targetString) {
+	private void ouputText_ID_ipu_startFrame_outFrame_DPscore(ArrayList<Ipu> ipuArraylist) {
 
 
 		FileWriter outFileWriter = null;
 
 		try {
-			outFileWriter = new FileWriter(new File(RESULT_DIRECTORY, targetString));
+			outFileWriter = new FileWriter(new File(this.RESULT_DIRECTORY, "05_Result" + this.TARGET_NAME));
+
+			String hogeString[];
+			String outString;
 
 			for(Ipu ipu : ipuArraylist){
-				StringBuilder stringBuilder = new StringBuilder();
-				stringBuilder.append(ipu.get_ID());
-				stringBuilder.append(",");
-				stringBuilder.append(ipu.get_ipu());
-				stringBuilder.append(",");
-				stringBuilder.append(ipu.get_frameStart());
-				stringBuilder.append(",");
-				stringBuilder.append(ipu.get_frameEnd());
-				stringBuilder.append(",");
-				stringBuilder.append(ipu.get_dpScore());
-				stringBuilder.append("\n");
-				outFileWriter.write(stringBuilder.toString());
+
+				//           0  1     2         3         4         5         6       7
+				// get_allで id,ipu,syllstart,syllmatch,syllend,framestart,frameend,DPscoreがとってこれる
+				hogeString = ipu.get_all_withDelimiter(",").split(",");
+				outString = hogeString[0] + "," + hogeString[1] + "," + hogeString[5] + "," + hogeString[6] + "," + hogeString[7] + "," + System.getProperty("line.separator");
+				outFileWriter.write(outString);
+
 			}
 		} catch (IOException e) {
 			// TODO 自動生成された catch ブロック
@@ -214,6 +219,88 @@ public class Execution {
 		}
 	}
 
+
+
+	/**
+	 * hashfrom~を実行する
+	 * @param ipuArraylist
+	 * @param hashFromOffline
+	 */
+	private void exe_hash(ArrayList<Ipu> ipuArraylist, HashFromOffline hashFromOffline) {
+		// コンストラクタを呼び出して"offline.info"から"Hashmap.map"を作り読み込む、既に存在していたらそれを読み込む。
+		// HashFromOffline hash = new HashFromOffline(directoryString, offlineString);
+
+		// "syllmatch"から"ipu,start"が得られるので、","でsplitしてipuObjectのセッターに投げる
+		String[] hogeStrings;
+		for(Ipu ipuObject : ipuArraylist){
+			hogeStrings = hashFromOffline.Hashfunc(Integer.valueOf(ipuObject.get_syllMatch())).split(",");
+			ipuObject.set_ipu_syllStart(hogeStrings[0], hogeStrings[1]);
+		}
+	}
+
+
+
+
+
+
+	/**
+	 * FrameSeaechを実行する
+	 * @param ipuArraylist
+	 * @param frameSearch
+	 */
+	private void exe_FrameSearch(ArrayList<Ipu> ipuArraylist, FrameSearch frameSearch) {
+
+
+		String ipuString = null;
+		String startString = null;
+		String matchString = null;
+		String endString = null;
+		String result[] = null;		// matchFrame + endFrame
+
+		String oldipuString = "XX-YY_ZZZZ";	// ダミー
+
+		Ipu tempIpu = new Ipu();
+		for(int i=0; i<ipuArraylist.size(); i++){
+
+			// Arraylist内のipuがこれで参照できるし、結果も格納できる
+			tempIpu = ipuArraylist.get(i);
+			ipuString = tempIpu.get_ipu();
+			startString = tempIpu.get_syllStart();
+			matchString = tempIpu.get_syllMatch();
+			endString = tempIpu.get_syllEnd();
+			result = null;		// matchFrame + endFrame
+
+			//System.out.println(hoge[0]);
+			System.out.println(ipuString + "," +  startString + "," +  matchString + "," +  endString);
+
+			// joutからstartFrameとendFrameを取得する
+			result = frameSearch.FrameSearchFromMatchedSyll(oldipuString, ipuString, startString, matchString, endString).split(",");
+
+			// 結果を格納
+			tempIpu.set_frameStart_frameEnd(result[0], result[1]);
+
+			// oldipuを更新
+			oldipuString = ipuString;
+
+		}
+	}
+
+
+
+
+
+
+	/**
+	 * 実行
+	 * @param ipuArraylist
+	 */
+	public void exe_wavCut(ArrayList<Ipu> ipuArraylist, MakeWaveFile makeWaveFile) {
+
+
+		for(Ipu ipu : ipuArraylist){
+			makeWaveFile.createWav(ipu.get_ID(), ipu.get_ipu(), ipu.get_frameStart(), ipu.get_frameEnd());
+		}
+	}
 
 
 
@@ -233,16 +320,19 @@ public class Execution {
 
 		// 設定ファイルの読み込み、ArrayList初期化
 		System.out.println("step " + steps++ + " : Use " + confString);
+
 		Execution stdDexecution = new Execution(confString);
 		ArrayList<Ipu> ipuArraylist = new ArrayList<Ipu>();
 
 		// targetFileから読み込み、ID,match,end,DPscoreを取得
 		System.out.println("step " + steps++ + " : ipuArrayList setup from Detect file");
-		ipuArraylist = stdDexecution.setFrom_onlyDetect(TARGET_NAME, DATA_DIRECTORY);
+		ipuArraylist = stdDexecution.setFrom_onlyDetect(stdDexecution.TARGET_NAME, stdDexecution.DATA_DIRECTORY);
 
 		// hashMAPを読み込んで、ipu,startを取得
 		System.out.println("step " + steps++ + " : Transform match-end number to ipu using Hash");
-		HashFromOffline.setFrom_hash(ipuArraylist, DATA_DIRECTORY, OFFLINE_NAME);
+		HashFromOffline hashFromOffline = new HashFromOffline(stdDexecution.DATA_DIRECTORY, stdDexecution.OFFLINE_NAME);
+		stdDexecution.exe_hash(ipuArraylist, hashFromOffline);
+
 
 		// ここでsyllReject機能を実装する予定
 		// match==endならArraylistから除外する、など
@@ -265,28 +355,30 @@ public class Execution {
 
 		// 認識結果(*.jout)からstartFrameとendFrameを取得
 		System.out.println("step " + steps++ + " : Get start-end Frames from jout");
-		FrameSearch.setFrom_jout(ipuArraylist, SDPWS_MATCHED_SYLL_DIRECTORY);
+		FrameSearch frameSearch = new FrameSearch(stdDexecution.SDPWS_MATCHED_SYLL_DIRECTORY);
+		stdDexecution.exe_FrameSearch(ipuArraylist, frameSearch);
 
 
 		// ここでひとまず結果をテキスト出力（後のスコア正規化で使用）
 		System.out.println("step " + steps++ + " : extout");
 		Collections.sort(ipuArraylist, new IdComparator());	//ID昇順
-		stdDexecution.ouputText_ID_ipu_startFrame_outFrame_DPscore(ipuArraylist, "05_Result" + TARGET_NAME);
+		stdDexecution.ouputText_ID_ipu_startFrame_outFrame_DPscore(ipuArraylist);
 		//
 
 		// wavファイルを読み込んで、切り抜いてディレクトリに出力
 		System.out.println("step " + steps++ + " : output_wavfile");
-		MakeWaveFile.execute_wavCut(ipuArraylist, TARGET_NAME, SDPWS_SPEECH_DIRECTORY, WAV_LIST_DIRECTORY);
+		MakeWaveFile makeWaveFile = new MakeWaveFile(stdDexecution.TARGET_NAME, stdDexecution.SDPWS_SPEECH_DIRECTORY, stdDexecution.WAV_LIST_DIRECTORY);
+		stdDexecution.exe_wavCut(ipuArraylist, makeWaveFile);
 
 
 
 		// デバッグ用
-		System.out.println(TARGET_NAME);
+		System.out.println(stdDexecution.TARGET_NAME);
 		for(Ipu ipuObject : ipuArraylist){
 			System.out.println(ipuObject.get_all_withDelimiter(","));
 		}
 		System.out.println("Num of canditates : " + ipuArraylist.size());
 
-
 	}
+
 }
